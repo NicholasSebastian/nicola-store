@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Header from "./Header";
 import Footer from "./Footer";
 
-const headerMessage = "Original Brand from Indonesia - Country wide delivery";
+const headerMessage = "Original Brand by Gilbert - Country wide delivery";
 
 const SEO = (
   <Head>

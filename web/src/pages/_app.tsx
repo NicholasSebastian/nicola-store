@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { createGlobalStyle } from 'styled-components';
+import Layout from '../components/Layout';
 
 // TODO: Authentication Provider.
 // TODO: Language Provider.
@@ -31,7 +32,9 @@ export default ({ Component, pageProps }) => {
   return (
     <Fragment>
       <GlobalStyles />
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </Fragment>
   );
 };

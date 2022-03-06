@@ -27,7 +27,7 @@ const Header: FC<IHeaderProps> = ({ message }) => {
   // TODO: 'Shopping Bag' should show the amount inside.
   const rightExtras = (
     <Fragment>
-      <Link href="/account">Account</Link>
+      <Link href="/account">Account / Login</Link>
       <Link href="/bag">Shopping Bag</Link>
     </Fragment>
   );
@@ -59,6 +59,10 @@ const Header: FC<IHeaderProps> = ({ message }) => {
 export default Header;
 
 const Container = styled.nav`
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
   // Message Bar
   > div:first-child {
     padding: 5px 0;
@@ -71,13 +75,14 @@ const Container = styled.nav`
 
   // Header
   > div:nth-child(2) {
+    background-color: #fff;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 16px 0;
     border-bottom: 1px solid #ccc;
-    position: sticky;
+    position: relative;
 
     // Logo
     > *:first-child {
