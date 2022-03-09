@@ -1,34 +1,38 @@
 import React, { FC, useRef } from 'react';
 import Link from "next/link";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 import { FaInstagramSquare, FaWhatsappSquare, FaShopify } from "react-icons/fa"
+import { fgFromBg } from '../utils/lightOrDark';
 
-// TODO: Change these.
-const copyright = "Nicola";
-const instagram = "nicolabaharyy";
+const copyright = "lanicola";
+const instagram = "nicolabaharyy"; // TODO: Change these.
 const whatsapp = "6282111602465";
 const shopee = "hanafashion.shop";
+
+// TODO: Show payment methods.
 
 const instagramUrl = `https://www.instagram.com/${instagram}/`;
 const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsapp}`;
 const shopeeUrl = `https://shopee.co.id/${shopee}`;
-const footnote = (year: number) => `Copyright © ${year} ${copyright}. All Rights Reserved.`;
+const footnote = (year: number) => `COPYRIGHT © ${year} ${copyright.toUpperCase()}`;
 
 const Footer: FC = () => {
+  const theme: any = useTheme();
+  const foregroundColor = fgFromBg(theme.accent);
   const currentYear = useRef(new Date().getFullYear()).current;
   return (
     <Container>
       <div>
-        <Link href="/returns">Returns Policy</Link>
-        <Link href="/privacy">Privacy Policy</Link>
-        <Link href="/shipping">Shipping Policy</Link>
-        <Link href="/terms">Terms and Conditions</Link>
+        <Link href="/returns-policy">Returns Policy</Link>
+        <Link href="/privacy-policy">Privacy Policy</Link>
+        <Link href="/shipping-policy">Shipping Policy</Link>
+        <Link href="/terms-and-conditions">Terms and Conditions</Link>
       </div>
       <div>
         <h4>Follow Us</h4>
-        <a href={instagramUrl}><FaInstagramSquare size={30} color='#fff' /></a>
-        <a href={whatsappUrl}><FaWhatsappSquare size={30} color='#fff' /></a>
-        <a href={shopeeUrl}><FaShopify size={30} color='#fff' /></a>
+        <a href={instagramUrl}><FaInstagramSquare size={30} color={foregroundColor} /></a>
+        <a href={whatsappUrl}><FaWhatsappSquare size={30} color={foregroundColor} /></a>
+        <a href={shopeeUrl}><FaShopify size={30} color={foregroundColor} /></a>
       </div>
       <span>{footnote(currentYear)}</span>
     </Container>
@@ -38,22 +42,25 @@ const Footer: FC = () => {
 export default Footer;
 
 const Container = styled.footer`
-  background-color: #000;
-  color: #fff;
-  text-align: center;
-  padding: 50px 0;
+  --foregroundColor: ${props => fgFromBg(props.theme.accent)};
+
+  background-color: ${props => props.theme.accent};
+  color: var(--foregroundColor);
+  padding-top: 40px;
+  padding-bottom: 50px;
+  padding-left: 24px;
 
   > div:nth-child(1) {
     display: flex;
     flex-direction: column;
-      margin-bottom: 20px;
+    align-items: start;
+    margin-bottom: 20px;
 
     > a {
-      color: #fff;
+      color: var(--foregroundColor);
       font-size: 13px;
       text-decoration: none;
-      margin: 0 12px;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
     }
   }
 
@@ -66,7 +73,7 @@ const Container = styled.footer`
     }
 
     > a > svg {
-      margin: 0 8px;
+      margin-right: 16px;
     }
   }
 
@@ -74,18 +81,27 @@ const Container = styled.footer`
     font-size: 10px;
   }
 
-  @media only screen and (min-width: 600px) {
+  @media only screen and (min-width: 700px) {
+    padding-top: 50px;
+    padding-left: 0;
+    text-align: center;
+
     > div:nth-child(1) {
       flex-direction: row !important;
       justify-content: center;
 
       > a {
         font-size: 14px;
+        margin: 0 12px;
       }
+    }
+
+    > div:nth-child(2) > a > svg {
+      margin: 0 8px;
     }
   }
 
-  @media only screen and (min-width: 1000px) {
+  @media only screen and (min-width: 1100px) {
     position: relative;
 
     > div:nth-child(2) {

@@ -3,10 +3,11 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import imageUrlFor from '../utils/imageUrlFor';
 import formatWithCommas from '../utils/formatWithCommas';
+import { fgFromBg } from '../utils/lightOrDark';
 
 // TODO: Have 2 images for each component. Show the other one on hover.
 
-const imageWidth = 300;
+const imageWidth = 420;
 
 const Item: FC<IItemProps> = ({ item }) => {
   const toPrice = (price: number) => 'Rp. ' + formatWithCommas(price);
@@ -41,7 +42,12 @@ const Container = styled.div`
     margin: 10px 0;
   }
 
+  > h4, > span {
+    color: ${props => fgFromBg(props.theme.bg)};
+  }
+
   > span:not(:last-of-type) > s {
+    color: #f44;
     font-size: 13px;
     margin-right: 10px;
   }

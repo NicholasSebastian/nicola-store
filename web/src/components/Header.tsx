@@ -1,8 +1,13 @@
 import React, { FC, Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import styled from "styled-components";
-import { GiHamburgerMenu } from "react-icons/gi"
+import styled, { useTheme } from "styled-components";
+import { GiHamburgerMenu, GiShoppingBag } from "react-icons/gi";
+
+import { fgFromBg } from "../utils/lightOrDark";
+import useBag from "../hooks/useBag";
+import useCurrency from "../hooks/useCurrency";
+import useLanguage, { Language } from "../hooks/useLanguage";
 import logo from '../../public/logo.png';
 
 const navigationPaths = [
@@ -14,21 +19,34 @@ const navigationPaths = [
   { name: 'Sale', path: '/sale' }
 ];
 
+const languageNames: ILanguageMap = {
+  'en': "English",
+  'id': "Bahasa Indonesia"
+};
+
 const Header: FC<IHeaderProps> = ({ message }) => {
-  // TODO: Toggle functionality.
+  const theme: any = useTheme();
+  const foregroundColor = fgFromBg(theme.bg);
+  
+  const [bag] = useBag();
+  const [currency, setCurrency] = useCurrency();
+  const [language, setLanguage] = useLanguage();
+
+  const toggleCurrency = () => setCurrency(c => c === 'IDR' ? 'USD' : 'IDR');
+  const toggleLanguage = () => setLanguage(l => l === 'en' ? 'id' : 'en');
+
   const leftExtras = (
     <Fragment>
-      <button>IDR</button>
-      <button>English</button>
+      <button onClick={toggleCurrency}>{currency.toUpperCase()}</button>
+      <button onClick={toggleLanguage}>{languageNames[language]}</button>
     </Fragment>
   );
 
-  // TODO: 'Account' shows 'Sign In' or 'Account' instead.
-  // TODO: 'Shopping Bag' should show the amount inside.
+  // TODO: 'Account / Login' or 'Account / Log Out'.
   const rightExtras = (
     <Fragment>
       <Link href="/account">Account / Login</Link>
-      <Link href="/bag">Shopping Bag</Link>
+      <Link href="/bag">{`Shopping Bag (${bag.length})`}</Link>
     </Fragment>
   );
 
@@ -41,7 +59,7 @@ const Header: FC<IHeaderProps> = ({ message }) => {
         </Link>
         <input type='checkbox' id="nav-drawer-toggle" />
         <label htmlFor="nav-drawer-toggle">
-          <GiHamburgerMenu size={30} color='#000' />
+          <GiHamburgerMenu size={30} color={foregroundColor} />
         </label>
         <div>
           {navigationPaths.map((path, i) => (
@@ -49,6 +67,9 @@ const Header: FC<IHeaderProps> = ({ message }) => {
           ))}
           {rightExtras}
         </div>
+        <Link href='/bag'>
+          <GiShoppingBag size={30} color={foregroundColor} />
+        </Link>
         <div>{leftExtras}</div>
         <div>{rightExtras}</div>
       </div>
@@ -58,7 +79,11 @@ const Header: FC<IHeaderProps> = ({ message }) => {
 
 export default Header;
 
+const breakpoint = 900;
+
 const Container = styled.nav`
+  --foregroundColor: ${props => fgFromBg(props.theme.bg)};
+
   position: sticky;
   top: 0;
   z-index: 1;
@@ -66,8 +91,8 @@ const Container = styled.nav`
   // Message Bar
   > div:first-child {
     padding: 5px 0;
-    background-color: #000;
-    color: #fff;
+    background-color: ${props => props.theme.accent};
+    color: ${props => fgFromBg(props.theme.accent)};
     font-size: 10px;
     text-transform: uppercase;
     text-align: center;
@@ -75,13 +100,13 @@ const Container = styled.nav`
 
   // Header
   > div:nth-child(2) {
-    background-color: #fff;
+    background-color:  ${props => props.theme.bg};
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 16px 0;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid ${props => props.theme.shadow};
     position: relative;
 
     // Logo
@@ -96,13 +121,13 @@ const Container = styled.nav`
 
     // Navigation Links
     > div:first-of-type > a {
-      color: #000;
+      color: var(--foregroundColor);
       font-size: 14px;
       font-family: 'Oswald', sans-serif;
       text-transform: uppercase;
       letter-spacing: 0.1rem;
       text-decoration: none;
-      border-bottom: 1px solid #fff;
+      border-bottom: 1px solid transparent;
 
       // Extras (These two refer to 'Accounts' and 'Shopping Bag')
       :last-child, :nth-last-of-type(2) {
@@ -126,6 +151,11 @@ const Container = styled.nav`
       left: 12px;
     }
 
+    // Shopping Bag Icon
+    > svg:last-of-type {
+      display: none;
+    }
+
     // Extras (These two refer to the Currency and Language toggles)
     > div:nth-last-of-type(2) {
       display: none;
@@ -142,7 +172,7 @@ const Container = styled.nav`
         padding: 6px 10px;
 
         :hover {
-          background-color: #eee;
+          background-color: ${props => props.theme.highlight};
           cursor: pointer;
         }
       }
@@ -156,23 +186,23 @@ const Container = styled.nav`
       right: 50px;
 
       > a {
-        color: #000;
+        color: var(--foregroundColor);
         font-size: 13px;
         text-decoration: none;
         margin-left: 15px;
         padding: 6px 10px;
 
         :hover {
-          background-color: #eee;
+          background-color: ${props => props.theme.highlight};
         }
       }
     }
 
-    @media only screen and (max-width: 800px) {
+    @media only screen and (max-width: ${breakpoint}px) {
       // Navigation Links
       > div:first-of-type {
-        background-color: #fff;
-        border-right: 1px solid #ccc;
+        background-color: ${props => props.theme.bg};
+        border-right: 1px solid ${props => props.theme.shadow};
         width: 75%;
         padding: 40px 0;
         display: flex;
@@ -182,7 +212,6 @@ const Container = styled.nav`
         left: -75%;
         bottom: 0;
         z-index: 1;
-
         transition: 0.25s ease-in-out;
 
         > a {
@@ -203,6 +232,14 @@ const Container = styled.nav`
             bottom: 60px;
           }
         }
+      }
+
+      // Shopping Bag Icon
+      > svg:last-of-type {
+        display: block;
+        position: absolute;
+        top: 20px;
+        right: 12px;
       }
 
       // Navigation Drawer Toggle
@@ -232,7 +269,7 @@ const Container = styled.nav`
     }
   }
 
-  @media only screen and (min-width: 800px) {
+  @media only screen and (min-width: ${breakpoint}px) {
     // Message Bar
     > div:first-child {
       font-size: 13px;
@@ -254,7 +291,7 @@ const Container = styled.nav`
         margin-top: 30px;
 
         > a:hover {
-          border-color: #000;
+          border-color: ${props => props.theme.accent};
         }
       }
 
@@ -268,4 +305,8 @@ const Container = styled.nav`
 
 interface IHeaderProps {
   message?: string
+}
+
+type ILanguageMap = { 
+  [Property in Language]: string 
 }

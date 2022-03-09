@@ -2,12 +2,17 @@ import React, { FC } from 'react';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
 import styled from 'styled-components';
+
 import sanity from '../utils/sanity';
 import imageUrlFor from '../utils/imageUrlFor';
+import SEO from '../components/SEO';
+
+// TODO: Add pop up.
 
 const Index: FC = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <Container>
+      <SEO />
       <h1>Testing 123</h1>
       <h2>Empty Page</h2>
       <h3>Still waiting for content...</h3>

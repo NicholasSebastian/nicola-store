@@ -1,23 +1,13 @@
 import React, { FC } from "react";
-import Head from 'next/head';
 import styled from "styled-components";
 import Header from "./Header";
 import Footer from "./Footer";
 
-const headerMessage = "Original Brand by Gilbert - Country wide delivery";
-
-const SEO = (
-  <Head>
-    <meta charSet="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Nicola</title>
-  </Head>
-);
+const headerMessage = "Just in: Our Winter/Spring Collection";
 
 const Layout: FC = ({ children }) => {
   return (
     <Container>
-      {SEO}
       <Header message={headerMessage} />
       <main>{children}</main>
       <Footer />

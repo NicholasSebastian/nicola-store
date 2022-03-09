@@ -1,11 +1,18 @@
 import React, { Fragment } from 'react';
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { BagProvider } from '../hooks/useBag';
+import { CurrencyProvider } from '../hooks/useCurrency';
+import { LanguageProvider } from '../hooks/useLanguage';
 import Layout from '../components/Layout';
 
 // TODO: Authentication Provider.
-// TODO: Language Provider.
-// TODO: Currency Provider.
-// TODO: Shopping Cart Provider.
+
+const theme = {
+  bg: '#fff',
+  accent: '#000',
+  shadow: '#ccc',
+  highlight: '#eee'
+};
 
 const GlobalStyles = createGlobalStyle`
   * {
@@ -32,9 +39,17 @@ export default ({ Component, pageProps }) => {
   return (
     <Fragment>
       <GlobalStyles />
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <BagProvider>
+        <CurrencyProvider>
+          <LanguageProvider>
+            <ThemeProvider theme={theme}>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </ThemeProvider>
+          </LanguageProvider>
+        </CurrencyProvider>
+      </BagProvider>
     </Fragment>
   );
 };
