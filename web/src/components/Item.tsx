@@ -2,7 +2,7 @@ import React, { FC, Fragment } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import imageUrlFor from '../utils/imageUrlFor';
-import formatWithCommas from '../utils/formatWithCommas';
+import formatCurrency from '../utils/formatCurrency';
 import { fgFromBg } from '../utils/lightOrDark';
 
 // TODO: Have 2 images for each component. Show the other one on hover.
@@ -10,17 +10,15 @@ import { fgFromBg } from '../utils/lightOrDark';
 const imageWidth = 420;
 
 const Item: FC<IItemProps> = ({ item }) => {
-  const toPrice = (price: number) => 'Rp. ' + formatWithCommas(price);
-
   return (
     <Link href={`/product/${item.slug}`}>
       <Container>
         <img src={imageUrlFor(item.image).width(imageWidth).url()} />
         <h4>{item.name}</h4>
-        <span>{item.discount ? <s>{toPrice(item.price)}</s> : toPrice(item.price)}</span>
+        <span>{item.discount ? <s>{formatCurrency(item.price)}</s> : formatCurrency(item.price)}</span>
         {item.discount > 0 && (
           <Fragment>
-            <span>{toPrice((item.price / 100) * (100 - item.discount))}</span>
+            <span>{formatCurrency((item.price / 100) * (100 - item.discount))}</span>
             <span>{item.discount + '% off'}</span>
           </Fragment>
         )}
@@ -42,16 +40,36 @@ const Container = styled.div`
     margin: 10px 0;
   }
 
+  > span {
+    font-size: 15px;
+  }
+
   > h4, > span {
     color: ${props => fgFromBg(props.theme.bg)};
   }
 
+  @media only screen and (min-width: 600px) {
+    > h4 {
+      font-size: 19px;
+    }
+
+    > span {
+      font-size: 16px;
+    }
+  }
+
+  // Discrount Price
   > span:not(:last-of-type) > s {
     color: #f44;
     font-size: 13px;
     margin-right: 10px;
+
+    @media only screen and (max-width: 600px) {
+      display: block;
+    }
   }
 
+  // Discount Percentage
   > span:nth-of-type(3) {
     background-color: rgba(255, 0, 0, 0.3);
     padding: 0 5px;
@@ -61,6 +79,7 @@ const Container = styled.div`
     right: 0;
   }
 
+  // Hover Effects
   :hover {
     cursor: pointer;
 

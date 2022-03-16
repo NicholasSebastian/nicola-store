@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import Head from 'next/head';
 
-const title = "LANICA Fashion";
+const title = "lanica the label";
 
 const SEO: FC<ISeoProps> = ({ pageTitle }) => (
   <Head>

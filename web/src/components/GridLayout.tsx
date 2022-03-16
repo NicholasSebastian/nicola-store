@@ -1,35 +1,42 @@
 import React, { FC, useState } from 'react';
 import styled from 'styled-components';
+import useLanguage, { Language } from '../hooks/useLanguage';
 import { fgFromBg } from '../utils/lightOrDark';
 import Item from '../components/Item';
 
 // TODO: Sort by (collection, lowest price, highest price).
 // TODO: Pagination.
 
-const sortOrders = [
-  { key: 'collection', title: 'Collection' },
-  { key: 'lowest', title: 'Lowest Price' },
-  { key: 'price', title: 'Highest Price' }
+const sortOrders: SortOrders = [
+  { key: 'collection', title: { en: 'Collection', id: 'Koleksi' } },
+  { key: 'lowest', title: { en: 'Lowest Price', id: 'Harga Terendah' } },
+  { key: 'price', title: { en: 'Highest Price', id: 'Harga Termahal' } }
 ];
 
 const GridLayout: FC<IGridLayoutProps> = ({ title, items }) => {
+  const [language] = useLanguage();
+
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState(sortOrders[0].key);
   const results = items.filter(item => new RegExp(search, 'i').test(item.name));
+
+  const overBar = (
+    <div>
+      <input type='input' placeholder='Search' value={search} onChange={e => setSearch(e.target.value)} />
+      {sortOrders.map(({ key, title }) => (
+        <div key={key}>
+          <input type='radio' name='sort' id={key} value={key} checked={sort === key} onChange={e => setSort(e.target.value)} />
+          <label htmlFor={key}>{title[language]}</label>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <Container>
       <nav>
         <h2>{title}</h2>
-        <div>
-          <input type='input' placeholder='Search' value={search} onChange={e => setSearch(e.target.value)} />
-          {sortOrders.map(({ key, title }) => (
-            <div key={key}>
-              <input type='radio' id={key} value={key} checked={sort === key} onChange={e => setSort(e.target.value)} />
-              <label htmlFor={key}>{title}</label>
-            </div>
-          ))}
-        </div>
+        {overBar}
       </nav>
       <section>
         {results.length > 0 ? results.map((item, i) => <Item key={i} item={item} />) : <div>No items found.</div>}
@@ -145,3 +152,10 @@ interface IGridLayoutProps {
   title: string
   items: Array<any>
 }
+
+interface ISortOrder {
+  key: string,
+  title: { [key in Language]: string }
+}
+
+type SortOrders = Array<ISortOrder>

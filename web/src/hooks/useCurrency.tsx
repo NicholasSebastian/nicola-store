@@ -2,6 +2,12 @@ import React, { FC, useState, useContext, createContext } from 'react';
 
 type Currency = 'IDR' | 'USD';
 type CurrencyState = [Currency, React.Dispatch<React.SetStateAction<Currency>>]
+type Symbols = { [key in Currency]: string };
+
+const symbols: Symbols = {
+  IDR: 'Rp. ',
+  USD: '$'
+};
 
 const CurrencyContext = createContext<CurrencyState>(undefined);
 
@@ -16,5 +22,5 @@ const CurrencyProvider: FC = ({ children }) => {
 
 const useCurrency = () => useContext(CurrencyContext);
 
-export { CurrencyProvider };
+export { CurrencyProvider, symbols };
 export default useCurrency;

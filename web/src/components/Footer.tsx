@@ -9,12 +9,9 @@ const instagram = "nicolabaharyy"; // TODO: Change these.
 const whatsapp = "6282111602465";
 const shopee = "hanafashion.shop";
 
-// TODO: Show payment methods.
-
 const instagramUrl = `https://www.instagram.com/${instagram}/`;
 const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsapp}`;
 const shopeeUrl = `https://shopee.co.id/${shopee}`;
-const footnote = (year: number) => `COPYRIGHT © ${year} ${copyright.toUpperCase()}`;
 
 const Footer: FC = () => {
   const theme: any = useTheme();
@@ -34,7 +31,7 @@ const Footer: FC = () => {
         <a href={whatsappUrl}><FaWhatsappSquare size={30} color={foregroundColor} /></a>
         <a href={shopeeUrl}><FaShopify size={30} color={foregroundColor} /></a>
       </div>
-      <span>{footnote(currentYear)}</span>
+      <span>{`Copyright © ${currentYear} ${copyright}`}</span>
     </Container>
   );
 }
