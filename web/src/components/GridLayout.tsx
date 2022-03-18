@@ -1,32 +1,49 @@
 import React, { FC, useState } from 'react';
 import styled from 'styled-components';
-import useLanguage, { Language } from '../hooks/useLanguage';
+import useLanguage, { ILocalization, Language } from '../hooks/useLanguage';
 import { fgFromBg } from '../utils/lightOrDark';
 import Item from '../components/Item';
 
-// TODO: Sort by (collection, lowest price, highest price).
 // TODO: Pagination.
 
-const sortOrders: SortOrders = [
-  { key: 'collection', title: { en: 'Collection', id: 'Koleksi' } },
-  { key: 'lowest', title: { en: 'Lowest Price', id: 'Harga Terendah' } },
-  { key: 'price', title: { en: 'Highest Price', id: 'Harga Termahal' } }
-];
+const sortOrders: ILocalization = {
+  'relevance': { en: 'Relevance', id: 'Paling Sesuai' },
+  'lowest': { en: 'Lowest Price', id: 'Harga Terendah' },
+  'highest': { en: 'Highest Price', id: 'Harga Termahal' }
+};
+
+const calcFinalPrice = (price: number, discount: number) => (price / 100) * (100 - discount);
 
 const GridLayout: FC<IGridLayoutProps> = ({ title, items }) => {
   const [language] = useLanguage();
 
   const [search, setSearch] = useState('');
-  const [sort, setSort] = useState(sortOrders[0].key);
+  const [sort, setSort] = useState('relevance');
   const results = items.filter(item => new RegExp(search, 'i').test(item.name));
+
+  const sorter = (a: any, b: any): number => {
+    const priceA = calcFinalPrice(a.price, a.discount);
+    const priceB = calcFinalPrice(b.price, b.discount);
+
+    switch (sort) {
+      case 'relevance':
+        return Date.parse(b.createdAt) - Date.parse(a.createdAt);
+      case 'lowest': 
+        return priceA - priceB;
+      case 'highest': 
+        return priceB - priceA;
+      default:
+        return 0;
+    }
+  }
 
   const overBar = (
     <div>
       <input type='input' placeholder='Search' value={search} onChange={e => setSearch(e.target.value)} />
-      {sortOrders.map(({ key, title }) => (
+      {Object.entries(sortOrders).map(([key, text]) => (
         <div key={key}>
           <input type='radio' name='sort' id={key} value={key} checked={sort === key} onChange={e => setSort(e.target.value)} />
-          <label htmlFor={key}>{title[language]}</label>
+          <label htmlFor={key}>{text[language]}</label>
         </div>
       ))}
     </div>
@@ -39,7 +56,10 @@ const GridLayout: FC<IGridLayoutProps> = ({ title, items }) => {
         {overBar}
       </nav>
       <section>
-        {results.length > 0 ? results.map((item, i) => <Item key={i} item={item} />) : <div>No items found.</div>}
+        {(results.length > 0) ? 
+          results.sort(sorter).map((item, i) => <Item key={i} item={item} />) : 
+          <div>No items found.</div>
+        }
       </section>
     </Container>
   );
@@ -54,7 +74,7 @@ const Container = styled.div`
   max-width: 600px;
   margin: 0px auto;
   padding-top: 30px;
-  padding-bottom: 110px;
+  padding-bottom: 130px;
 
   > nav:first-child {
     > h2 {
@@ -152,10 +172,3 @@ interface IGridLayoutProps {
   title: string
   items: Array<any>
 }
-
-interface ISortOrder {
-  key: string,
-  title: { [key in Language]: string }
-}
-
-type SortOrders = Array<ISortOrder>

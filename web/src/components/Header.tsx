@@ -1,8 +1,10 @@
-import React, { FC, Fragment } from "react";
+import React, { FC, Fragment, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import styled, { useTheme } from "styled-components";
+import { useRouter } from "next/router";
+import { useSession, signIn } from "next-auth/react";
 import { GiHamburgerMenu, GiShoppingBag } from "react-icons/gi";
+import styled, { useTheme } from "styled-components";
 
 import { fgFromBg } from "../utils/lightOrDark";
 import useBag from "../hooks/useBag";
@@ -11,12 +13,13 @@ import useLanguage, { Language } from "../hooks/useLanguage";
 import logo from '../../public/logo.png';
 
 const navigationPaths = [
+  { name: 'New Arrivals', path: '/new' },
   { name: 'Shirts', path: '/category/shirts' },
   { name: 'Outerwear', path: '/category/outerwear' },
   { name: 'Pants', path: '/category/pants' },
   { name: 'Skirts', path: '/category/skirts' },
   { name: 'Dresses', path: '/category/dresses' },
-  { name: 'Sale', path: '/sale' }
+  { name: 'On Sale', path: '/sale' }
 ];
 
 const languageNames: ILanguageMap = {
@@ -26,26 +29,41 @@ const languageNames: ILanguageMap = {
 
 const Header: FC<IHeaderProps> = ({ message }) => {
   const theme: any = useTheme();
+  const { status } = useSession();
+  const router = useRouter();
   const foregroundColor = fgFromBg(theme.bg);
   
   const [bag] = useBag();
   const [currency, setCurrency] = useCurrency();
   const [language, setLanguage] = useLanguage();
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
+  useEffect(() => {
+    router.events.on('routeChangeStart', onRouteChange);
+    return () => router.events.off('routeChangeStart', onRouteChange);
+  }, []);
+
+  const onRouteChange = () => setDrawerOpen(false);
   const toggleCurrency = () => setCurrency(c => c === 'IDR' ? 'USD' : 'IDR');
   const toggleLanguage = () => setLanguage(l => l === 'en' ? 'id' : 'en');
+
+  const extra = (
+    <Link href="/confirm-payment">Confirm Payment</Link>
+  );
 
   const leftExtras = (
     <Fragment>
       <button onClick={toggleCurrency}>{currency.toUpperCase()}</button>
       <button onClick={toggleLanguage}>{languageNames[language]}</button>
+      {extra}
     </Fragment>
   );
 
-  // TODO: 'Account / Login' or 'Account / Log Out'.
   const rightExtras = (
     <Fragment>
-      <Link href="/account">Account / Login</Link>
+      <button onClick={() => signIn()}>
+        {status === 'authenticated' ? "Account / Logout" : "Account / Login"}
+      </button>
       <Link href="/bag">{`Shopping Bag (${bag.length})`}</Link>
     </Fragment>
   );
@@ -57,7 +75,8 @@ const Header: FC<IHeaderProps> = ({ message }) => {
         <Link href='/'>
           <Image src={logo} alt="Logo" />
         </Link>
-        <input type='checkbox' id="nav-drawer-toggle" />
+        <input type='checkbox' id="nav-drawer-toggle" 
+          checked={drawerOpen} onChange={() => setDrawerOpen(!drawerOpen)} />
         <label htmlFor="nav-drawer-toggle">
           <GiHamburgerMenu size={30} color={foregroundColor} />
         </label>
@@ -65,6 +84,7 @@ const Header: FC<IHeaderProps> = ({ message }) => {
           {navigationPaths.map((path, i) => (
             <Link key={i} href={path.path}>{path.name}</Link>
           ))}
+          {extra}
           {rightExtras}
         </div>
         <Link href='/bag'>
@@ -120,17 +140,20 @@ const Container = styled.nav`
     }
 
     // Navigation Links
-    > div:first-of-type > a {
+    > div:first-of-type > a, 
+    > div:first-of-type > button {
+      background: none;
       color: var(--foregroundColor);
       font-size: 14px;
       font-family: 'Oswald', sans-serif;
       text-transform: uppercase;
       letter-spacing: 0.1rem;
       text-decoration: none;
+      border: none;
       border-bottom: 1px solid transparent;
 
-      // Extras (These two refer to 'Accounts' and 'Shopping Bag')
-      :last-child, :nth-last-of-type(2) {
+      // Extras (These two refer to 'Accounts', 'Shopping Bag', and 'Confirm Payment')
+      :last-child, :nth-last-child(2), :nth-last-child(3) {
         display: none;
       }
     }
@@ -156,18 +179,20 @@ const Container = styled.nav`
       display: none;
     }
 
-    // Extras (These two refer to the Currency and Language toggles)
+    // Extras (These two refer to the 'Currency', 'Language', and 'Confirm Payment')
     > div:nth-last-of-type(2) {
       display: none;
       position: absolute;
       top: 10px;
       left: 50px;
 
-      > button {
+      > button, a {
         background: none;
+        color: var(--foregroundColor);
         border: none;
         font-size: 13px;
         font-family: 'Poppins', sans-serif;
+        text-decoration: none;
         margin-right: 15px;
         padding: 6px 10px;
 
@@ -185,8 +210,11 @@ const Container = styled.nav`
       top: 10px;
       right: 50px;
 
-      > a {
+      > a, 
+      > button {
+        background: none;
         color: var(--foregroundColor);
+        border: none;
         font-size: 13px;
         text-decoration: none;
         margin-left: 15px;
@@ -194,6 +222,7 @@ const Container = styled.nav`
 
         :hover {
           background-color: ${props => props.theme.highlight};
+          cursor: pointer;
         }
       }
     }
@@ -214,12 +243,14 @@ const Container = styled.nav`
         z-index: 1;
         transition: 0.25s ease-in-out;
 
-        > a {
+        > a,
+        > button {
           margin-bottom: 20px;
           margin-left: 30px;
+          padding: 0;
 
-          // Extras (These two refer to 'Accounts' and 'Shopping Bag')
-          :last-child, :nth-last-of-type(2) {
+          // Extras (These two refer to 'Accounts', 'Shopping Bag', and 'Confirm Payment')
+          :last-child, :nth-last-child(2), :nth-last-child(3) {
             display: block;
             position: absolute;
           }
@@ -228,8 +259,12 @@ const Container = styled.nav`
             bottom: 20px;
           }
 
-          :nth-last-of-type(2) {
+          :nth-last-child(2) {
             bottom: 60px;
+          }
+
+          :nth-last-child(3) {
+            bottom: 100px;
           }
         }
       }
@@ -285,7 +320,7 @@ const Container = styled.nav`
 
       // Navigation Container
       > div:first-of-type {
-        width: 800px;
+        width: 920px;
         display: flex;
         justify-content: space-evenly;
         margin-top: 30px;
@@ -295,7 +330,7 @@ const Container = styled.nav`
         }
       }
 
-      // Extras (These two refer to 'Accounts' and 'Shopping Bag')
+      // Left and Right Extras.
       > div:last-of-type, > div:nth-last-of-type(2) {
         display: block;
       }

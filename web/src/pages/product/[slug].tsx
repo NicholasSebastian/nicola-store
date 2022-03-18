@@ -6,9 +6,23 @@ import sanity from '../../utils/sanity';
 import imageUrlFor from '../../utils/imageUrlFor';
 import formatCurrency from '../../utils/formatCurrency';
 import { fgFromBg } from '../../utils/lightOrDark';
-import useLanguage, { Language } from '../../hooks/useLanguage';
+import useLanguage, { ILocalization, Language } from '../../hooks/useLanguage';
 import SEO from '../../components/SEO';
 import Gallery from '../../components/Gallery';
+
+const localization: ILocalization = {
+  'sold': { en: 'Sold Out', id: 'Stok Habis' },
+  'stock': { en: 'In Stock', id: 'Tersedia' },
+  'variant': { en: 'Variants', id: 'Variasi' },
+  'size': { en: 'Sizes', id: 'Ukuran' },
+  'bag': { en: 'Add to Bag', id: 'Tambah ke Keranjang' },
+  'info': { en: 'More Info', id: 'Info Tambahan' },
+  'pick': { en: 'Pick a Size!', id: 'Pilih Ukuran!' },
+  'sorry': {
+    en: 'Sorry, this item is currently not available.',
+    id: 'Maaf, barang ini sedang tidak tersedia.'
+  }
+};
 
 const useVariant = (_variants: Variants): StateReturnType<IVariant> => {
   const [index, setIndex] = useState(0);
@@ -36,19 +50,24 @@ const useInventory = (product: IProduct, variantIndex: number): IQuantityPerSize
 }
 
 const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const [language] = useLanguage(); // TODO
-
+  const [language] = useLanguage();
   const [variant, variantIndex, setVariantIndex] = useVariant(product.variants);
   const quantities = useInventory(product, variantIndex);
+
   const [size, setSize] = useState<keyof IQuantityPerSize>();
   useEffect(() => setSize(undefined), [variantIndex]);
+  
+  const [amount, setAmount] = useState<number>(1);
+  useEffect(() => setAmount(1), [variantIndex, size]);
 
   const [sizeMsg, setSizeMsg] = useState<string>();
-  useEffect(() => setSizeMsg(undefined), [size]);
+  useEffect(() => setSizeMsg(undefined), [size, language]);
+
+  const soldOut = quantities && Object.values(quantities).every(qty => qty === 0);
 
   const handleAddToBag: React.MouseEventHandler = () => {
     if (!size) {
-      setSizeMsg("Pick a Size!");
+      setSizeMsg(soldOut ? localization.sorry[language] : localization.pick[language]);
     }
     // TODO
   }
@@ -67,15 +86,13 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
             {(product.discount > 0) && <span>{product.discount + '%'}</span>}
           </div>
           <div>
-            {quantities && Object.values(quantities).every(qty => qty === 0) && (
-              <b>SOLD OUT</b>
-            )}
+            {soldOut && <b>{localization.sold[language].toUpperCase()}</b>}
             {quantities && size && (
-              <span><b>In Stock:</b> {`${quantities[size]} (Size: ${size.toUpperCase()})`}</span>
+              <span><b>{localization.stock[language]}:</b> {`${quantities[size]} (Size: ${size.toUpperCase()})`}</span>
             )}
           </div>
           <div>
-            <div>Variant:</div>
+            <div>{localization.variant[language]}:</div>
             {product.variants.map(({ key, name }: IVariant, i: number) => (
               <Fragment key={i}>
                 <input type='radio' name='variant' id={key}
@@ -85,7 +102,7 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
             ))}
           </div>
           <div>
-            <div>Sizes:<span>{sizeMsg}</span></div>
+            <div>{localization.size[language]}:<span>{sizeMsg}</span></div>
             {(['s', 'm', 'l'] as Array<keyof IQuantityPerSize>).map((name, i) => (
               <Fragment key={i}>
                 <input type='radio' name='size' id={name} disabled={!quantities || quantities[name] === 0}
@@ -95,15 +112,24 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
             ))}
           </div>
           <div>
-            <button onClick={handleAddToBag}>Add to Bag</button>
-            <a href={product.shopee}><button>Shopee</button></a>
-            <a><button disabled>Tokopedia</button></a>
+            {quantities && size && (
+              <Fragment>
+                <button onClick={() => { if (amount > 1) setAmount(amount - 1) }}>-</button>
+                <div>{amount}</div>
+                <button onClick={() => { if (amount < quantities[size]) setAmount(amount + 1) }}>+</button>
+              </Fragment>
+            )}
           </div>
-          <PortableText content={product.description['en']} />
+          <div>
+            <button onClick={handleAddToBag}>{localization.bag[language]}</button>
+            <a href={product.shopee}><button disabled={!product.shopee}>Shopee</button></a>
+            <a href={product.tokopedia}><button disabled={!product.tokopedia}>Tokopedia</button></a>
+          </div>
+          <PortableText content={product.description[language]} />
           {product.moreInfo && (
             <div>
-              <h4>More Info</h4>
-              <PortableText content={product.moreInfo['en']} />
+              <h4>{localization.info[language]}</h4>
+              <PortableText content={product.moreInfo[language]} />
             </div>
           )}
         </div>
@@ -251,9 +277,36 @@ const Container = styled.div`
       }
     }
 
-    // Buttons
+    // Amount
     > div:nth-child(7) {
-      margin-top: 40px;
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: 40px 1fr 40px;
+
+      > div {
+        height: 40px;
+        border-top: 1px solid ${props => props.theme.accent};
+        border-bottom: 1px solid ${props => props.theme.accent};
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      > button {
+        background: none;
+        border: 1px solid ${props => props.theme.accent};
+        font-size: 18px;
+
+        :hover {
+          cursor: pointer;
+          background-color: ${props => props.theme.highlight};
+        }
+      }
+    }
+
+    // Buttons
+    > div:nth-child(8) {
+      margin-top: 5px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-gap: 5px;
@@ -285,13 +338,13 @@ const Container = styled.div`
     }
 
     // Description
-    > div:nth-child(8) {
+    > div:nth-child(9) {
       margin-top: 30px;
       font-size: 15px;
     }
 
     // More Info
-    > div:nth-child(9) {
+    > div:nth-child(10) {
       margin-top: 40px;
 
       > h4 {

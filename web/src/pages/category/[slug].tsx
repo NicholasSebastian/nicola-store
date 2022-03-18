@@ -25,7 +25,11 @@ const contentQuery = (`
     ...slug { 'slug': current },
     price,
     discount,
-    ...colors[0]{ ...images[0] { ...asset { 'image': _ref }}},
+    ...colors[0] { 
+      ...images[0] { ...asset { 'image1': _ref }},
+      ...images[1] { ...asset { 'image2': _ref }}
+    },
+    ...colors[1] { ...images[0] { ...asset { 'image3': _ref }} },
     'createdAt': _createdAt,
   }
 `);

@@ -1,17 +1,20 @@
 import React, { FC, useRef } from 'react';
 import Link from "next/link";
 import styled, { useTheme } from "styled-components";
-import { FaInstagramSquare, FaWhatsappSquare, FaShopify } from "react-icons/fa"
+import { FaInstagramSquare, FaLine, FaWhatsappSquare } from "react-icons/fa";
+import { SiGmail } from "react-icons/si";
 import { fgFromBg } from '../utils/lightOrDark';
 
-const copyright = "lanicola";
+const copyright = "lanica";
+const email = "lanicathelabel@gmail.com";
 const instagram = "nicolabaharyy"; // TODO: Change these.
+const line = "";
 const whatsapp = "6282111602465";
-const shopee = "hanafashion.shop";
 
+const emailUrl = `mailto:${email}`;
 const instagramUrl = `https://www.instagram.com/${instagram}/`;
+const lineUrl = `https://line.me/ti/p/${line}`;
 const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsapp}`;
-const shopeeUrl = `https://shopee.co.id/${shopee}`;
 
 const Footer: FC = () => {
   const theme: any = useTheme();
@@ -26,10 +29,11 @@ const Footer: FC = () => {
         <Link href="/terms-and-conditions">Terms and Conditions</Link>
       </div>
       <div>
-        <h4>Follow Us</h4>
+        <h4>Contact Us</h4>
+        <a href={emailUrl}><SiGmail size={30} color={foregroundColor} /></a>
         <a href={instagramUrl}><FaInstagramSquare size={30} color={foregroundColor} /></a>
+        <a href={lineUrl}><FaLine size={30} color={foregroundColor} /></a>
         <a href={whatsappUrl}><FaWhatsappSquare size={30} color={foregroundColor} /></a>
-        <a href={shopeeUrl}><FaShopify size={30} color={foregroundColor} /></a>
       </div>
       <span>{`Copyright © ${currentYear} ${copyright}`}</span>
     </Container>

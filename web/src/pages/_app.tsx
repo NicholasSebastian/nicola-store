@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { SessionProvider } from 'next-auth/react';
 import { BagProvider } from '../hooks/useBag';
 import { CurrencyProvider } from '../hooks/useCurrency';
 import { LanguageProvider } from '../hooks/useLanguage';
@@ -38,21 +39,23 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
-export default ({ Component, pageProps }) => {
+export default ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
     <Fragment>
       <GlobalStyles />
-      <BagProvider>
-        <CurrencyProvider>
-          <LanguageProvider>
-            <ThemeProvider theme={theme}>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </ThemeProvider>
-          </LanguageProvider>
-        </CurrencyProvider>
-      </BagProvider>
+      <SessionProvider session={session}>
+        <BagProvider>
+          <CurrencyProvider>
+            <LanguageProvider>
+              <ThemeProvider theme={theme}>
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </ThemeProvider>
+            </LanguageProvider>
+          </CurrencyProvider>
+        </BagProvider>
+      </SessionProvider>
     </Fragment>
   );
 };

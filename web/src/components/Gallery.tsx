@@ -2,48 +2,58 @@ import React, { FC, useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { fgFromBg } from '../utils/lightOrDark';
 
-const breakpoint = 1024;
-const swipeDistance = 50;
+const BREAKPOINT = 1024;
+const SWIPE_DISTANCE = 50;
 
 const Gallery: FC<IGalleryProps> = ({ imageUrls }) => {
   const [index, setIndex] = useState(0);
   const touchPos = useRef<number>();
   const touchPos2 = useRef<number>();
   const imgRef = useRef<HTMLImageElement>();
+  const windowWidth = useRef<number>();
 
   useEffect(() => {
-    window.addEventListener('resize', () => setIndex(0));
+    windowWidth.current = window.innerWidth;
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
   }, []);
 
   useEffect(() => { setIndex(0) }, [imageUrls]);
 
+  const onResize = () => {
+    if (window.innerWidth !== windowWidth.current) {
+      windowWidth.current = window.innerWidth;
+      setIndex(0);
+    }
+  }
+
   const handleSelect = (i: number) => {
-    if (window.innerWidth > breakpoint) setIndex(i);
+    if (window.innerWidth > BREAKPOINT) setIndex(i);
   }
 
   const handleTouch: React.TouchEventHandler = e => {
-    if (window.innerWidth < breakpoint) {
+    if (window.innerWidth < BREAKPOINT) {
       touchPos2.current = e.targetTouches[0]?.clientX;
     }
   }
 
   const handleSwipeStart = (posX: number) => {
-    if (window.innerWidth < breakpoint) {
+    if (window.innerWidth < BREAKPOINT) {
       touchPos.current = posX;
     }
   }
 
   const handleSwipeEnd = (posX: number) => {
-    if (window.innerWidth > breakpoint) return;
+    if (window.innerWidth > BREAKPOINT) return;
 
     const vector = touchPos.current - posX;
-    if (vector > swipeDistance) {
+    if (vector > SWIPE_DISTANCE) {
       setIndex(prevIndex => {
         const hasNext = (prevIndex < imageUrls.length - 1);
         return hasNext ? (prevIndex + 1) : prevIndex;
       });
     }
-    if (vector < -swipeDistance) {
+    if (vector < -SWIPE_DISTANCE) {
       setIndex(prevIndex => {
         const hasBefore = (prevIndex > 0);
         return hasBefore ? (prevIndex - 1) : prevIndex;
@@ -84,7 +94,7 @@ const Container = styled.div<IStyleArguments>`
     display: none;
   }
 
-  @media only screen and (max-width: ${breakpoint}px) {
+  @media only screen and (max-width: ${BREAKPOINT}px) {
     position: relative;
 
     > img {
@@ -117,7 +127,7 @@ const Container = styled.div<IStyleArguments>`
     }
   }
 
-  @media only screen and (min-width: ${breakpoint}px) {
+  @media only screen and (min-width: ${BREAKPOINT}px) {
     display: grid;
     grid-template-columns: 120px 1fr;
     grid-gap: 10px;
