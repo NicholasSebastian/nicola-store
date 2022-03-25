@@ -6,9 +6,7 @@
 - Header useEffect: if Shopping Bag gets new item added, display a popover.
 - Footer social links.
 - Links page. (Like linktree)
-
-- User Authentication: Next Auth + Google Cloud Firestore.
-- Header shows current logged-in / logged-out status.
+- Newsletter.
 
 - Payment System: Direct Transfer or Third-Party Handler?
   - Direct Transfer:

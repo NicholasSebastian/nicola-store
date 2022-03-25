@@ -2,7 +2,7 @@ import React, { FC, useState, useRef, useEffect, Fragment } from 'react';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import styled from 'styled-components';
 import PortableText from 'react-portable-text';
-import sanity from '../../utils/sanity';
+import sanity from '../../lib/sanity';
 import imageUrlFor from '../../utils/imageUrlFor';
 import formatCurrency from '../../utils/formatCurrency';
 import { fgFromBg } from '../../utils/lightOrDark';

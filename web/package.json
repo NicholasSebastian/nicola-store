@@ -3,6 +3,7 @@
   "description": "Sanity + Next.js frontend example",
   "private": true,
   "dependencies": {
+    "@google-cloud/firestore": "^5.0.2",
     "@sanity/block-content-to-react": "^1.3.12",
     "@sanity/client": "^0.132.10",
     "@sanity/image-url": "^0.132.8",

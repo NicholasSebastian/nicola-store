@@ -1,9 +1,9 @@
 import React, { FC, Fragment, useState, useEffect } from "react";
+import { GiHamburgerMenu, GiShoppingBag } from "react-icons/gi";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useSession, signIn } from "next-auth/react";
-import { GiHamburgerMenu, GiShoppingBag } from "react-icons/gi";
+import { useSession, signIn, signOut } from "next-auth/react";
 import styled, { useTheme } from "styled-components";
 
 import { fgFromBg } from "../utils/lightOrDark";
@@ -29,7 +29,7 @@ const languageNames: ILanguageMap = {
 
 const Header: FC<IHeaderProps> = ({ message }) => {
   const theme: any = useTheme();
-  const { status } = useSession();
+  const { status, data } = useSession();
   const router = useRouter();
   const foregroundColor = fgFromBg(theme.bg);
   
@@ -39,11 +39,11 @@ const Header: FC<IHeaderProps> = ({ message }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
-    router.events.on('routeChangeStart', onRouteChange);
-    return () => router.events.off('routeChangeStart', onRouteChange);
+    router.events.on('routeChangeStart', closeDrawer);
+    return () => router.events.off('routeChangeStart', closeDrawer);
   }, []);
 
-  const onRouteChange = () => setDrawerOpen(false);
+  const closeDrawer = () => setDrawerOpen(false);
   const toggleCurrency = () => setCurrency(c => c === 'IDR' ? 'USD' : 'IDR');
   const toggleLanguage = () => setLanguage(l => l === 'en' ? 'id' : 'en');
 
@@ -61,9 +61,14 @@ const Header: FC<IHeaderProps> = ({ message }) => {
 
   const rightExtras = (
     <Fragment>
-      <button onClick={() => signIn()}>
-        {status === 'authenticated' ? "Account / Logout" : "Account / Login"}
-      </button>
+      {status === 'authenticated' ? (
+        <button onClick={() => signOut()}>
+          Account / Logout
+          <div>Logged in as {data.user.name}</div>
+        </button>
+      ) : 
+        <button onClick={() => signIn()}>Account / Login</button>
+      }
       <Link href="/bag">{`Shopping Bag (${bag.length})`}</Link>
     </Fragment>
   );
@@ -103,6 +108,7 @@ const breakpoint = 900;
 
 const Container = styled.nav`
   --foregroundColor: ${props => fgFromBg(props.theme.bg)};
+  --accentTextColor: ${props => fgFromBg(props.theme.accent)};
 
   position: sticky;
   top: 0;
@@ -112,7 +118,7 @@ const Container = styled.nav`
   > div:first-child {
     padding: 5px 0;
     background-color: ${props => props.theme.accent};
-    color: ${props => fgFromBg(props.theme.accent)};
+    color: var(--accentTextColor);
     font-size: 10px;
     text-transform: uppercase;
     text-align: center;
@@ -132,7 +138,7 @@ const Container = styled.nav`
     // Logo
     > *:first-child {
       height: 40px !important;
-      aspect-ratio: 5 / 2;
+      aspect-ratio: 7 / 2;
 
       :hover {
         cursor: pointer;
@@ -219,10 +225,29 @@ const Container = styled.nav`
         text-decoration: none;
         margin-left: 15px;
         padding: 6px 10px;
+        position: relative;
 
         :hover {
           background-color: ${props => props.theme.highlight};
           cursor: pointer;
+
+          > div {
+            display: block;
+          }
+        }
+
+        > div {
+          display: none;
+          background-color: ${props => props.theme.accent};
+          color: var(--accentTextColor);
+          font-size: 12px;
+          padding: 12px 10px 6px 10px;
+          white-space: nowrap;
+          clip-path: polygon(0 15%, 95% 15%, 100% 0, 100% 100%, 0 100%);
+          
+          position: absolute;
+          top: 32px;
+          right: 5px;
         }
       }
     }
@@ -261,6 +286,10 @@ const Container = styled.nav`
 
           :nth-last-child(2) {
             bottom: 60px;
+
+            > div {
+              display: none;
+            }
           }
 
           :nth-last-child(3) {

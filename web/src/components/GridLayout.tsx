@@ -39,7 +39,7 @@ const GridLayout: FC<IGridLayoutProps> = ({ title, items }) => {
 
   const overBar = (
     <div>
-      <input type='input' placeholder='Search' value={search} onChange={e => setSearch(e.target.value)} />
+      <input type='search' placeholder='Search' value={search} onChange={e => setSearch(e.target.value)} />
       {Object.entries(sortOrders).map(([key, text]) => (
         <div key={key}>
           <input type='radio' name='sort' id={key} value={key} checked={sort === key} onChange={e => setSort(e.target.value)} />
@@ -165,6 +165,10 @@ const Container = styled.div`
 
   @media only screen and (min-width: 1366px) {
     max-width: 1300px;
+
+    > section {
+      grid-template-columns: repeat(4, minmax(100px, 1fr));
+    }
   }
 `;
 

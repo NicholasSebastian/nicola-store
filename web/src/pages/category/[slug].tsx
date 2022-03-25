@@ -1,6 +1,6 @@
 import React, { FC, Fragment } from 'react';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
-import sanity from '../../utils/sanity';
+import sanity from '../../lib/sanity';
 import GridLayout from '../../components/GridLayout';
 import SEO from '../../components/SEO';
 

@@ -1,13 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet, GoogleSpreadsheetRow } from 'google-spreadsheet';
-import credentials from '../../../google-sheets.json';
+import { GoogleSpreadsheetWorksheet, GoogleSpreadsheetRow } from 'google-spreadsheet';
+import getSheets from '../../lib/sheets';
 import { IProduct } from '../product/[slug]';
 
 const INVENTORY_ID = '1I-BCqr41Lzlf5XVJEgrDZF9yYHupBREOipbAHjdwwhk';
 const HEADERS = ['id', 'name', 's', 'm', 'l'];
 
-const inventory = new GoogleSpreadsheet(INVENTORY_ID);
-inventory.useServiceAccountAuth(credentials);
+const inventory = getSheets(INVENTORY_ID);
 
 function getSheet(category: string): Promise<GoogleSpreadsheetWorksheet> {
   return new Promise(async resolve => {

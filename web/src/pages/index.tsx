@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
 import styled from 'styled-components';
-import sanity from '../utils/sanity';
+import sanity from '../lib/sanity';
 import imageUrlFor from '../utils/imageUrlFor';
 import SEO from '../components/SEO';
 

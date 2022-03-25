@@ -1,11 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { GoogleSpreadsheet } from 'google-spreadsheet';
-import credentials from '../../../google-sheets.json';
+import getSheets from '../../lib/sheets';
 
 const ORDERS_ID = '1CkYtzZHQvkLSlMQwXBmLN4x30c7wcor3fUDtPA1NIGY';
 
-const orders = new GoogleSpreadsheet(ORDERS_ID);
-orders.useServiceAccountAuth(credentials);
+const orders = getSheets(ORDERS_ID);
 
 // TODO
 // - GET: Handle users wanting to see their past orders. (Use query params to pass in the user ID)
