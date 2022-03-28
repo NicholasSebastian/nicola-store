@@ -6,8 +6,6 @@ import { CurrencyProvider } from '../hooks/useCurrency';
 import { LanguageProvider } from '../hooks/useLanguage';
 import Layout from '../components/Layout';
 
-// TODO: Authentication Provider.
-
 const theme = {
   bg: '#fff',
   accent: '#000',

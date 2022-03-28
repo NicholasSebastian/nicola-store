@@ -3,7 +3,7 @@ import { GiHamburgerMenu, GiShoppingBag } from "react-icons/gi";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import styled, { useTheme } from "styled-components";
 
 import { fgFromBg } from "../utils/lightOrDark";
@@ -62,10 +62,12 @@ const Header: FC<IHeaderProps> = ({ message }) => {
   const rightExtras = (
     <Fragment>
       {status === 'authenticated' ? (
-        <button onClick={() => signOut()}>
-          Account / Logout
-          <div>Logged in as {data.user.name}</div>
-        </button>
+        <Link href='/profile'>
+          <button>
+            Account / Logout
+            <div>Logged in as {data.user.name}</div>
+          </button>
+        </Link>
       ) : 
         <button onClick={() => signIn()}>Account / Login</button>
       }
@@ -243,11 +245,11 @@ const Container = styled.nav`
           font-size: 12px;
           padding: 12px 10px 6px 10px;
           white-space: nowrap;
-          clip-path: polygon(0 15%, 95% 15%, 100% 0, 100% 100%, 0 100%);
+          clip-path: polygon(0 15%, 90% 15%, 92.5% 0, 95% 15%, 100% 15%, 100% 100%, 0 100%);
           
           position: absolute;
           top: 32px;
-          right: 5px;
+          right: 0;
         }
       }
     }

@@ -8,17 +8,17 @@ function rgbFromColor(color: string): RGB {
   if (color.match(/^rgb/i)) {
     const match = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
     return {
-        r: parseInt(color[1]),
-        g: parseInt(color[2]),
-        b: parseInt(color[3])
+      r: parseInt(match[1]),
+      g: parseInt(match[2]),
+      b: parseInt(match[3])
     };
   }
   else {
     const value = +("0x" + color.slice(1).replace(color.length < 5 && /./g, '$&$&'));
     return {
-        r: value >> 16,
-        g: value >> 8 & 255,
-        b: value & 255
+      r: value >> 16,
+      g: value >> 8 & 255,
+      b: value & 255
     };
   }
 }
