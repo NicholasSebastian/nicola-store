@@ -66,14 +66,15 @@ const Gallery: FC<IGalleryProps> = ({ imageUrls }) => {
   return (
     <Container displacement={imgRef.current ? (imgRef.current.width * index * -1) : 0}>
       <div>{imageUrls.map((url, i) => (
-        <img key={i} ref={imgRef} src={url} className={(index === i) ? 'selected' : ''}
+        <img key={i} ref={imgRef} src={url} alt='Product Image' 
+          className={(index === i) ? 'selected' : ''}
           onClick={() => handleSelect(i)} onTouchMove={handleTouch}
           onTouchStart={e => handleSwipeStart(e.targetTouches[0].clientX)} 
           onTouchEnd={e => handleSwipeEnd(touchPos2.current)}
           onMouseDown={e => handleSwipeStart(e.clientX)} 
           onMouseUp={e => handleSwipeEnd(e.clientX)} />
       ))}</div>
-      <img src={imageUrls[index]} />
+      <img src={imageUrls[index]} alt='Product Image' />
       <div>{index + 1}/{imageUrls.length}</div>
     </Container>
   );

@@ -1,12 +1,11 @@
 # TO DO LIST
 
 - Home page content. (Home Page schema in Sanity)
-- Home page pop-up.
-- Component content from Sanity: Header categories(, newest collection) (Language toggleable) and Footer pages.
-- Header useEffect: if Shopping Bag gets new item added, display a popover.
-- Footer social links.
 - Links page. (Like linktree)
-- Newsletter.
+- Component content from Sanity: Header categories(, newest collection) (Language toggleable) and Footer pages.
+- Footer social links.
+
+- Header useEffect: if Shopping Bag gets new item added, display a popover.
 
 - Payment System: Direct Transfer or Third-Party Handler?
   - Direct Transfer:
@@ -17,9 +16,16 @@
     - Once the product has arrived at the customer, we manually update the status to 'Finished'.
   - Third-Party Handler: Integrate their API as a checkout option.
 
+- Use bcrypt to encrypt passwords.
+- Newsletter.
+
 ## Smaller, Less Important Stuff
 
 - Mobile view: Navigation drawer has a black thing when a link is tapped.
 - Like the categories page, but for collections.
 - In-Website chat.
 - Weird CSS bug in GridLayout's overbar on iPad.
+- Schema Markup for SEO.
+- Home page pop-up.
+
+know yourself.

@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import db from '../lib/firestore';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
 import { fgFromBg } from '../utils/lightOrDark';
+import SEO from '../components/SEO';
 
 const localization: ILocalization = {
   'username': { en: 'Username', id: 'Nama Pengguna' },
@@ -19,6 +20,10 @@ const Information: FC<IProfileProps> = props => {
   const [email, setEmail] = useState(props.email);
   const [phone, setPhone] = useState(props.phone);
   const [address, setAddress] = useState(props.address);
+
+  const updateProfile = async () => {
+    // TODO
+  }
 
   return (
     <Form>
@@ -42,7 +47,7 @@ const Information: FC<IProfileProps> = props => {
         {localization.address[language]}
         <textarea value={address} onChange={e => setAddress(e.target.value)} />
       </label>
-      <button>Save Changes</button>
+      <button onClick={updateProfile}>Save Changes</button>
     </Form>
   );
 }
@@ -64,6 +69,7 @@ const Profile: FC = (props: InferGetServerSidePropsType<typeof getServerSideProp
 
   return (
     <Container>
+      <SEO pageTitle='Profile' />
       <nav>
         <button onClick={() => setCurrentPage('profile')} 
           className={currentPage === 'profile' && 'selected'}>

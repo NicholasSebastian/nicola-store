@@ -428,6 +428,6 @@ interface IQuantityPerSize {
   l: number
 }
 
-type Variants = Array<IVariant>
+export type Variants = Array<IVariant>
 type Quantities = Array<IQuantityPerSize>
 type StateReturnType<T> = [T, number, React.Dispatch<React.SetStateAction<number>>];

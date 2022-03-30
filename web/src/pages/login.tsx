@@ -4,6 +4,7 @@ import { signIn } from 'next-auth/react';
 import styled from 'styled-components';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
 import { fgFromBg } from '../utils/lightOrDark';
+import SEO from '../components/SEO';
 import Loading from '../components/Loading';
 
 const localization: ILocalization = {
@@ -42,6 +43,7 @@ const Login: FC<IPageProps> = ({ changePage }) => {
 
   return (
     <Container>
+      <SEO pageTitle='Log In' />
       <h1>{localization.login[language]}</h1>
       <LoginValidity />
       <label>
@@ -130,6 +132,7 @@ const SignUp: FC<IPageProps> = ({ changePage }) => {
 
   return loading ? <Loading /> : (
     <Container>
+      <SEO pageTitle='Sign Up' />
       {success ? 
         <h4>{localization.success[language]}</h4> : (
         <Fragment>
