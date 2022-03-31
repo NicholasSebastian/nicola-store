@@ -9,7 +9,7 @@ const TextLayout: FC<IContent> = (props) => {
     <Container>
       <SEO pageTitle={props.title.en} />
       <h1>{props.title[language]}</h1>
-      <p dangerouslySetInnerHTML={{ __html: props.content[language] }} />
+      <article dangerouslySetInnerHTML={{ __html: props.content[language] }} />
     </Container>
   );
 }

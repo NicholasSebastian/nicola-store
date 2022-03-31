@@ -124,7 +124,7 @@ const Container = styled.div`
   > section {
     display: grid;
     grid-template-columns: repeat(2, minmax(100px, 1fr));
-    grid-gap: 20px;
+    grid-gap: 50px 20px;
   }
 
   @media only screen and (min-width: 1024px) {

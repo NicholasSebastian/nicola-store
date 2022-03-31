@@ -5,12 +5,12 @@ import imageUrlFor from '../utils/imageUrlFor';
 import formatCurrency from '../utils/formatCurrency';
 import { fgFromBg } from '../utils/lightOrDark';
 
-const imageRes = 600;
+const IMAGE_RES = 600;
 
 const Item: FC<IItemProps> = ({ item }) => {
   const [hover, setHover] = useState(false);
-  const mainImg = useMemo(() => imageUrlFor(item.image1).height(imageRes).url(), [item.slug]);
-  const hoverImg = useMemo(() => imageUrlFor(item.image2 ?? item.image3).height(imageRes).url(), [item.slug]);
+  const mainImg = useMemo(() => imageUrlFor(item.image1).height(IMAGE_RES).url(), [item.slug]);
+  const hoverImg = useMemo(() => imageUrlFor(item.image2 ?? item.image3).height(IMAGE_RES).url(), [item.slug]);
 
   return (
     <Link href={`/product/${item.slug}`}>

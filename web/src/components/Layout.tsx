@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Header from "./Header";
 import Footer from "./Footer";
 
-const headerMessage = "Just in: Our Winter/Spring Collection";
+const headerMessage = "Just in: Our April/May Collection";
 
 const Layout: FC = ({ children }) => {
   return (

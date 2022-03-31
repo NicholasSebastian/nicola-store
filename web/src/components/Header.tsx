@@ -13,7 +13,7 @@ import useLanguage, { Language } from "../hooks/useLanguage";
 import logo from '../../public/logo.png';
 
 const navigationPaths = [
-  { name: 'New Arrivals', path: '/new' },
+  { name: 'New Arrivals', path: '/new-arrivals' },
   { name: 'Shirts', path: '/category/shirts' },
   { name: 'Outerwear', path: '/category/outerwear' },
   { name: 'Pants', path: '/category/pants' },

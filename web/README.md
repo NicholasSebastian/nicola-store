@@ -1,7 +1,5 @@
 # TO DO LIST
 
-- Home page content. (Home Page schema in Sanity)
-- Links page. (Like linktree)
 - Component content from Sanity: Header categories(, newest collection) (Language toggleable) and Footer pages.
 - Footer social links.
 
@@ -17,7 +15,6 @@
   - Third-Party Handler: Integrate their API as a checkout option.
 
 - Use bcrypt to encrypt passwords.
-- Newsletter.
 
 ## Smaller, Less Important Stuff
 
@@ -27,5 +24,6 @@
 - Weird CSS bug in GridLayout's overbar on iPad.
 - Schema Markup for SEO.
 - Home page pop-up.
+- Instagram posts on home screen.
 
 know yourself.
