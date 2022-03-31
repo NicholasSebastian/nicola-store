@@ -33,7 +33,7 @@ const Header: FC<IHeaderProps> = ({ message }) => {
   const router = useRouter();
   const foregroundColor = fgFromBg(theme.bg);
   
-  const [bag] = useBag();
+  const { bag, openBag } = useBag();
   const [currency, setCurrency] = useCurrency();
   const [language, setLanguage] = useLanguage();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -71,7 +71,7 @@ const Header: FC<IHeaderProps> = ({ message }) => {
       ) : 
         <button onClick={() => signIn()}>Account / Login</button>
       }
-      <Link href="/bag">{`Shopping Bag (${bag.length})`}</Link>
+      <button onClick={openBag}>{`Shopping Bag (${bag.length})`}</button>
     </Fragment>
   );
 
@@ -94,9 +94,7 @@ const Header: FC<IHeaderProps> = ({ message }) => {
           {extra}
           {rightExtras}
         </div>
-        <Link href='/bag'>
-          <GiShoppingBag size={30} color={foregroundColor} />
-        </Link>
+        <GiShoppingBag onClick={openBag} size={30} color={foregroundColor} />
         <div>{leftExtras}</div>
         <div>{rightExtras}</div>
       </div>

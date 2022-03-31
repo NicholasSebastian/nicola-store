@@ -42,17 +42,17 @@ export default ({ Component, pageProps: { session, ...pageProps } }) => {
     <Fragment>
       <GlobalStyles />
       <SessionProvider session={session}>
-        <BagProvider>
-          <CurrencyProvider>
-            <LanguageProvider>
-              <ThemeProvider theme={theme}>
+        <CurrencyProvider>
+          <LanguageProvider>
+            <ThemeProvider theme={theme}>
+              <BagProvider>
                 <Layout>
                   <Component {...pageProps} />
                 </Layout>
-              </ThemeProvider>
-            </LanguageProvider>
-          </CurrencyProvider>
-        </BagProvider>
+              </BagProvider>
+            </ThemeProvider>
+          </LanguageProvider>
+        </CurrencyProvider>
       </SessionProvider>
     </Fragment>
   );

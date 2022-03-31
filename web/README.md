@@ -1,8 +1,5 @@
 # TO DO LIST
 
-- Component content from Sanity: Header categories(, newest collection) (Language toggleable) and Footer pages.
-- Footer social links.
-
 - Header useEffect: if Shopping Bag gets new item added, display a popover.
 
 - Payment System: Direct Transfer or Third-Party Handler?
@@ -13,6 +10,10 @@
     - We are to manually update the row's status in the Google Sheets to 'Processing'.
     - Once the product has arrived at the customer, we manually update the status to 'Finished'.
   - Third-Party Handler: Integrate their API as a checkout option.
+
+- Component content from Sanity: Header categories(, newest collection) and Footer pages.
+- Language toggle for header and footer elements.
+- Footer social links.
 
 - Use bcrypt to encrypt passwords.
 
