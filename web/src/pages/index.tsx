@@ -1,14 +1,15 @@
 import React, { FC, Fragment, useMemo, useState } from 'react';
 import { GetStaticProps } from 'next';
+import Link from 'next/link';
 import styled from 'styled-components';
 import sanity from '../lib/sanity';
+import useLanguage, { ILocalization } from '../hooks/useLanguage';
 import imageUrlFor from '../utils/imageUrlFor';
+import { fgFromBg } from '../utils/lightOrDark';
 import SEO from '../components/SEO';
 import Carousel, { IBannerData } from '../components/Carousel';
 import Banner from '../components/Banner';
 import Item from '../components/Item';
-import { fgFromBg } from '../utils/lightOrDark';
-import useLanguage, { ILocalization } from '../hooks/useLanguage';
 
 const BANNER_RES = 700;
 
@@ -61,6 +62,7 @@ const Index: FC<IHomeContent> = (props) => {
             <Item key={i} item={item} />
           ))}
         </div>
+        <Link href='/new-arrivals'><button>See More</button></Link>
       </section>
       <Banner src={bannerMiddle} height='20vw' />
       {/* TODO: Instagram posts here; make an API route to get the images with phantomJS.
@@ -73,7 +75,7 @@ const Index: FC<IHomeContent> = (props) => {
         {subscribed ? (
           <div>
             {subscribed === 'invalid' ? 
-              "You entered a wrong email address!" : 
+              "You entered an invalid email address." : 
               "You have added to our mailing list! Look forward to it!"
             }
           </div>
@@ -120,12 +122,32 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 const Container = styled.div`
+  --foregroundColor: ${props => fgFromBg(props.theme.bg)};
+
   h2 {
+    color: var(--foregroundColor);
     font-size: 23px;
     margin-top: 0;
 
     @media only screen and (min-width: 1024px) {
       font-size: 32px;
+    }
+  }
+
+  button {
+    padding: 12px 30px;
+    background-color: ${props => props.theme.accent};
+    color: ${props => fgFromBg(props.theme.accent)};
+    border: 1px solid transparent;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 100ms linear;
+
+    :hover {
+      cursor: pointer;
+      background-color: ${props => props.theme.bg};
+      color: var(--foregroundColor);
+      border-color: ${props => props.theme.accent};
     }
   }
 
@@ -148,7 +170,7 @@ const Container = styled.div`
   > section:first-of-type {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 3vw;
+    grid-gap: 20px;
   }
 
   > section:nth-of-type(2) {
@@ -164,6 +186,11 @@ const Container = styled.div`
       > *:last-child {
         display: none;
       }
+    }
+
+    > button {
+      display: block;
+      margin: 30px auto 0 auto;
     }
 
     @media only screen and (min-width: 1024px) {
@@ -216,20 +243,6 @@ const Container = styled.div`
 
     > button {
       margin-top: 20px;
-      padding: 12px 30px;
-      background-color: ${props => props.theme.accent};
-      color: ${props => fgFromBg(props.theme.accent)};
-      border: 1px solid transparent;
-      font-size: 14px;
-      font-weight: 600;
-      transition: all 100ms linear;
-
-      :hover {
-        cursor: pointer;
-        background-color: ${props => props.theme.bg};
-        color: ${props => fgFromBg(props.theme.bg)};
-        border-color: ${props => props.theme.accent};
-      }
     }
 
     @media only screen and (max-width: 500px) {

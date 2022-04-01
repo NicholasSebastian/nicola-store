@@ -7,11 +7,16 @@ import { LanguageProvider } from '../hooks/useLanguage';
 import Layout from '../components/Layout';
 
 const theme = {
-  bg: '#fff',
-  accent: '#000',
-  shadow: '#ccc',
-  highlight: '#eee'
+  bg: '#f9f2ee',
+  accent: '#97645a',
+  shadow: '#ffd4c2',
+  highlight: '#fffbf8'
 };
+
+const fontColors = {
+  light: '#f9f2ee',
+  dark: '#6b4942'
+}
 
 const GlobalStyles = createGlobalStyle`
   * {
@@ -35,7 +40,13 @@ const GlobalStyles = createGlobalStyle`
     text-transform: uppercase;
     letter-spacing: 0.1rem;
   }
+
+  div, span, p {
+    color: ${fontColors.dark};
+  }
 `;
+
+export { fontColors };
 
 export default ({ Component, pageProps: { session, ...pageProps } }) => {
   return (

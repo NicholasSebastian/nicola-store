@@ -6,6 +6,7 @@ import sanity from '../../lib/sanity';
 import imageUrlFor from '../../utils/imageUrlFor';
 import formatCurrency from '../../utils/formatCurrency';
 import { fgFromBg } from '../../utils/lightOrDark';
+import useBag from '../../hooks/useBag';
 import useLanguage, { ILocalization, Language } from '../../hooks/useLanguage';
 import SEO from '../../components/SEO';
 import Gallery from '../../components/Gallery';
@@ -51,15 +52,17 @@ const useInventory = (product: IProduct, variantIndex: number): IQuantityPerSize
 
 const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [language] = useLanguage();
-  const [variant, variantIndex, setVariantIndex] = useVariant(product.variants);
-  const quantities = useInventory(product, variantIndex);
+  const { addToBag } = useBag();
 
+  const [variant, variantIndex, setVariantIndex] = useVariant(product.variants);
   const [size, setSize] = useState<keyof IQuantityPerSize>();
+  const quantities = useInventory(product, variantIndex);
   useEffect(() => setSize(undefined), [variantIndex]);
   
   const [amount, setAmount] = useState<number>(1);
   useEffect(() => setAmount(1), [variantIndex, size]);
 
+  // UI state only.
   const [sizeMsg, setSizeMsg] = useState<string>();
   useEffect(() => setSizeMsg(undefined), [size, language]);
 
@@ -69,7 +72,13 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
     if (!size) {
       setSizeMsg(soldOut ? localization.sorry[language] : localization.pick[language]);
     }
-    // TODO
+    else {
+      addToBag({ 
+        productId: product.id, 
+        variantKey: variant.key,
+        amount
+      });
+    }
   }
 
   return (

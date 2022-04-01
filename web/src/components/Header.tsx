@@ -122,6 +122,7 @@ const Container = styled.nav`
     font-size: 10px;
     text-transform: uppercase;
     text-align: center;
+    user-select: none;
   }
 
   // Header
@@ -132,7 +133,7 @@ const Container = styled.nav`
     justify-content: center;
     align-items: center;
     padding: 16px 0;
-    border-bottom: 1px solid ${props => props.theme.shadow};
+    border-bottom: 1px solid ${props => props.theme.highlight};
     position: relative;
 
     // Logo
@@ -322,12 +323,13 @@ const Container = styled.nav`
           bottom: 0;
           right: 0;
           left: 75%;
+          z-index: 2;
           opacity: 0;
         }
 
         :checked ~ div:first-of-type {
           left: 0px;
-          box-shadow: 20px 0 40px rgba(0, 0, 0, 0.4);
+          box-shadow: 20px 0 30px ${props => `${props.theme.accent}88`};
         }
       }
     }

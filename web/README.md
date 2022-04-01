@@ -1,6 +1,7 @@
 # TO DO LIST
 
 - Header useEffect: if Shopping Bag gets new item added, display a popover.
+- Disallow adding to cart for items that already exist in the cart.
 
 - Payment System: Direct Transfer or Third-Party Handler?
   - Direct Transfer:

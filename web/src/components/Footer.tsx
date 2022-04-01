@@ -69,6 +69,7 @@ const Container = styled.footer`
     margin-bottom: 15px;
 
     > h4 {
+      color: var(--foregroundColor);
       margin-top: 0;
       margin-bottom: 10px;
     }
@@ -79,6 +80,7 @@ const Container = styled.footer`
   }
 
   > span {
+    color: var(--foregroundColor);
     font-size: 10px;
   }
 

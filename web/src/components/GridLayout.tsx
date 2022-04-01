@@ -132,7 +132,7 @@ const Container = styled.div`
 
     > nav:first-child > div {
       justify-content: end;
-      border: 1px solid ${props => props.theme.shadow};
+      border: 1px solid ${props => props.theme.accent};
       position: relative;
       padding: 12px;
 

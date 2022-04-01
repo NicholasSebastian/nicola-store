@@ -1,3 +1,5 @@
+import { fontColors } from '../pages/_app';
+
 interface RGB {
   r: number
   g: number
@@ -36,7 +38,8 @@ function lightOrDark(color: string): boolean {
 
 function fgFromBg(backgroundColor: string) {
   // Returns black if the given bgColor is light, white if the given bgColor is dark.
-  return lightOrDark(backgroundColor) ? '#000' : '#fff';
+  const { light, dark } = fontColors;
+  return lightOrDark(backgroundColor) ? dark : light;
 }
 
 export { fgFromBg };

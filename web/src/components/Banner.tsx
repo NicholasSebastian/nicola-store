@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const BannerWithLink: FC<IBannerProps> = props => {
   if (props.href) 
   return (
-    <Link href={props.href}>
+    <Link href={`/${props.href}`}>
       <Banner {...props}><div /></Banner>
     </Link>
   );

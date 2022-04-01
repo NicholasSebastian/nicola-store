@@ -46,7 +46,7 @@ const Carousel: FC<ICarouselProps> = ({ banners }) => {
       <div>
         {banners.map((_, i) => (
           <CgShapeCircle key={i} size={24} onClick={() => setIndex(i)}
-            color={index === i ? theme.highlight : theme.accent} />
+            color={index === i ? theme.accent : theme.highlight} />
         ))}
       </div>
     </Container>
