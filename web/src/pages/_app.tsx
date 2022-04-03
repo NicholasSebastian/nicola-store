@@ -31,7 +31,7 @@ const GlobalStyles = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
   }
 
-  button {
+  button, a, input, textarea {
     font-family: 'Poppins', sans-serif;
   }
 

@@ -1,13 +1,18 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import useBag, { BagConsumer, IItemData } from '../hooks/useBag';
 import { fgFromBg } from '../utils/lightOrDark';
+import imageUrlFor from '../utils/imageUrlFor';
+import formatCurrency from '../utils/formatCurrency';
+
+const IMAGE_WIDTH = 60;
 
 const ItemEntry: FC<IItemProps> = props => {
-  const { item } = props;
   const { bag, setBag } = useBag();
-  const { amount } = bag.find(i => i.variantKey === item.variantKey);
+  const { item } = props;
+  const { size, amount } = bag.find(i => i.variantKey === item.variantKey);
+  const image = useMemo(() => imageUrlFor(item.image).width(IMAGE_WIDTH).url(), [item.image]);
 
   const updateAmount = (increment: Incrementor) => setBag(bag => {
     const index = bag.findIndex(i => i.variantKey === item.variantKey);
@@ -18,11 +23,17 @@ const ItemEntry: FC<IItemProps> = props => {
     return [...before, newItem, ...after];
   });
 
+  const removeItem = () => setBag(bag => bag.filter(i => i.variantKey !== item.variantKey));
+
   return (
     <ItemContainer>
-      <div>{item.name}</div>
-      <div>{item.variant}</div>
-      <div>{item.price}</div>
+      <div><img src={image} alt="Product Image" /></div>
+      <div>
+        <span>{item.name}</span>
+        <div>{`${item.variant} (${size.toUpperCase()})`}</div>
+        <div>{formatCurrency(item.price)}</div>
+      </div>
+      <div><button onClick={removeItem}>Remove</button></div>
       <div>
         <button onClick={() => updateAmount(i => (i > 1) ? (i - 1) : i)}>-</button>
         <div>{amount}</div>
@@ -33,6 +44,7 @@ const ItemEntry: FC<IItemProps> = props => {
 }
 
 const ShoppingBag: FC = () => {
+  const { closeBag } = useBag();
   return (
     <Container>
       <h2>Your Bag</h2>
@@ -42,7 +54,11 @@ const ShoppingBag: FC = () => {
           <span>Your cart is empty.</span>
         }
       </BagConsumer>
-      <div><Link href='/checkout'><button>Checkout</button></Link></div>
+      <div>
+        <Link href='/checkout'>
+          <button onClick={closeBag}>Checkout</button>
+        </Link>
+      </div>
     </Container>
   );
 }
@@ -93,7 +109,63 @@ const ItemContainer = styled.div`
   margin: 0 14px;
   padding: 10px 0;
   border-top: 1px solid ${props => props.theme.shadow};
-  border-bottom: 1px solid ${props => props.theme.shadow};
+  display: grid;
+  grid-template-columns: ${IMAGE_WIDTH}px 1fr;
+  grid-gap: 0 10px;
+
+  > div:first-child > img {
+    border: 1px solid ${props => props.theme.highlight};
+    user-select: none;
+    user-drag: none;
+  }
+
+  > div:nth-child(2) {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    > span:first-child {
+      font-weight: 600;
+    }
+  }
+
+  > div:nth-child(3) > button {
+    background: none;
+    color: ${props => fgFromBg(props.theme.bg)};
+    border: none;
+    padding: 0;
+    font-size: 11px;
+
+    :hover {
+      cursor: pointer;
+    }
+  }
+
+  > div:last-child {
+    display: flex;
+    justify-content: right;
+
+    > button {
+      background-color: ${props => props.theme.accent};
+      color: ${props => fgFromBg(props.theme.accent)};
+      border: none;
+      width: 24px;
+
+      :hover {
+        cursor: pointer;
+      }
+    }
+
+    > div {
+      background-color: #fff;
+      border-top: 1px solid ${props => props.theme.accent};
+      border-bottom: 1px solid ${props => props.theme.accent};
+      width: 50px;
+      font-size: 14px;
+      text-align: center;
+    }
+  }
 `;
 
 type Incrementor = (prevAmount: number) => number;

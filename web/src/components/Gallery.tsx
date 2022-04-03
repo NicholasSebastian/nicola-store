@@ -135,6 +135,8 @@ const Container = styled.div<IStyleArguments>`
 
     > img {
       width: 100%;
+      user-select: none;
+      user-drag: none;
     }
 
     > div:first-child {

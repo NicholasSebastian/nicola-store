@@ -207,7 +207,6 @@ const Form = styled.section`
       border: 1px solid ${props => props.theme.accent};
       padding: 10px;
       margin-top: 2px;
-      font-family: 'Poppins', sans-serif;
 
       :focus {
         outline: none;

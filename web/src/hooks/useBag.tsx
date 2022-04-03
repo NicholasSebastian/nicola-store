@@ -2,6 +2,8 @@ import React, { FC, useState, useEffect, useContext, createContext, useRef } fro
 import { AiOutlineClose } from 'react-icons/ai';
 import styled from 'styled-components';
 import ShoppingBag from '../components/ShoppingBag';
+import Loading from '../components/Loading';
+import { Size } from '../pages/product/[slug]';
 
 const DRAWER_SPEED = 250; // in milliseconds.
 
@@ -28,12 +30,13 @@ const BagProvider: FC = ({ children }) => {
   }
 
   const addToBag = (item: IItem) => {
-    if (bag.find(i => i.variantKey === item.variantKey)) {
-      // TODO: Display message.
+    if (bag.some(i => i.variantKey === item.variantKey)) {
+      return false;
     }
     else {
       setBag(prevState => [...prevState, item]);
-      // TODO: Display message.
+      openBag();
+      return true;
     }
   }
 
@@ -42,7 +45,7 @@ const BagProvider: FC = ({ children }) => {
   }, [bag]);
   
   return (
-    <BagContext.Provider value={{ bag, setBag, openBag, addToBag }}>
+    <BagContext.Provider value={{ bag, setBag, openBag, addToBag, closeBag }}>
       <Container ref={containerRef} onClick={closeBag} >
         <div ref={drawerRef} onClick={e => e.stopPropagation()}>
           <AiOutlineClose onClick={closeBag} size={26} />
@@ -64,7 +67,7 @@ const BagConsumer: FC<IBagConsumerProps> = ({ children }) => {
     Promise.allSettled(
       // Fetches or recycles item data.
       bag.map(item => {
-        const itemData = items.find(itemData => itemData.productId === item.productId);
+        const itemData = items.find(itemData => itemData.variantKey === item.variantKey);
         return itemData ?? fetch(`/api/item?product=${item.productId}&variant=${item.variantKey}`);
       })
     )
@@ -90,7 +93,11 @@ const BagConsumer: FC<IBagConsumerProps> = ({ children }) => {
     .finally(() => setLoading(false));
   }, [bag]);
 
-  return loading ? <div>Loading</div> : children(items);
+  // Only return the items that exist in the bag. 
+  // This is to fix an issue when deleting items because the item data lags behind.
+  const syncedItems = items.filter(i => bag.some(item => item.variantKey === i.variantKey));
+
+  return loading ? <Loading /> : children(syncedItems);
 }
 
 export { BagProvider, BagConsumer };
@@ -138,7 +145,8 @@ interface IBagContext {
   bag: Bag
   setBag: React.Dispatch<React.SetStateAction<Bag>>
   openBag: () => void
-  addToBag: (item: IItem) => void
+  addToBag: (item: IItem) => boolean
+  closeBag: () => void
 }
 
 interface IBagConsumerProps {
@@ -149,6 +157,7 @@ interface IItem {
   productId: string
   variantKey: string
   amount: number
+  size: Size
 }
 
 export interface IItemData {

@@ -198,7 +198,6 @@ const Container = styled.nav`
         color: var(--foregroundColor);
         border: none;
         font-size: 13px;
-        font-family: 'Poppins', sans-serif;
         text-decoration: none;
         margin-right: 15px;
         padding: 6px 10px;

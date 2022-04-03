@@ -1,5 +1,6 @@
 import React, { FC, Fragment, useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import ReCaptcha from 'react-google-recaptcha';
 import { signIn } from 'next-auth/react';
 import styled from 'styled-components';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
@@ -27,6 +28,7 @@ const localization: ILocalization = {
   'passwordNoMatch': { en: 'Passwords do not match.', id: 'Kata-kata sandi tidak cocok.' },
   'emailInvalid': { en: 'Invalid email address.', id: 'Email salah.' },
   'emailTaken': { en: 'An account with this email already exists.', id: 'Akun dengan email ini sudah ada.' },
+  'recaptcha': { en: 'Recaptcha required.', id: 'Recaptcha diperlukan.' }
 };
 
 const Login: FC<IPageProps> = ({ changePage }) => {
@@ -78,10 +80,12 @@ const SignUp: FC<IPageProps> = ({ changePage }) => {
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [newsletter, setNewsletter] = useState(false);
+  const [notRobot, setNotRobot] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [serverError, setServerError] = useState(false);
+  const [recaptchaError, setRecaptchaError] = useState(false);
   const [errors, setErrors] = useState<ISignUpErrors>({
     usernameBlank: false, 
     usernameTaken: false, 
@@ -97,6 +101,9 @@ const SignUp: FC<IPageProps> = ({ changePage }) => {
   });
 
   const onSubmit = () => {
+    setRecaptchaError(!notRobot);
+    if (!notRobot) return;
+
     setLoading(true);
     fetch('/api/auth/signup', { 
       method: 'POST', 
@@ -188,6 +195,8 @@ const SignUp: FC<IPageProps> = ({ changePage }) => {
             <input type='checkbox' checked={newsletter} onChange={() => setNewsletter(!newsletter)} />
             {localization.newsletter[language]}
           </label>
+          {recaptchaError && <span>{localization.recaptcha[language]}</span>}
+          <ReCaptcha sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_KEY} onChange={val => setNotRobot(!!val)} />
           <button onClick={onSubmit}>{localization.signup[language]}</button>
           <hr />
         </Fragment>
@@ -254,7 +263,6 @@ const Container = styled.div`
         border: 1px solid ${props => props.theme.accent};
         padding: 10px;
         margin-top: 2px;
-        font-family: 'Poppins', sans-serif;
 
         :focus {
           outline: none;
@@ -290,6 +298,7 @@ const Container = styled.div`
       align-items: center;
       font-size: 14px;
       user-select: none;
+      margin-bottom: 20px;
 
       > input {
         margin: 0;
@@ -300,6 +309,11 @@ const Container = styled.div`
         cursor: pointer;
       }
     }
+  }
+
+  > span:last-of-type {
+    color: #f44;
+    font-size: 12px;
   }
 
   > button {

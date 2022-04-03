@@ -8,24 +8,24 @@ const scopes = [
 ];
 
 // Singletons.
-let clientInstance = null;
-let sheetsInstance: sheets_v4.Sheets = null;
-let docsInstance: docs_v1.Docs = null;
+let authClient = null;
+let sheetsClient: sheets_v4.Sheets = null;
+let docsClient: docs_v1.Docs = null;
 
 export default async () => {
-  if (!clientInstance) {
+  if (!authClient) {
     const _auth = new auth.GoogleAuth({ credentials, scopes });
-    clientInstance = await _auth.getClient();
+    authClient = await _auth.getClient();
   }
-  if (!sheetsInstance) {
-    sheetsInstance = sheets({ version: 'v4', auth: clientInstance });
+  if (!sheetsClient) {
+    sheetsClient = sheets({ version: 'v4', auth: authClient });
   }
-  if (!docsInstance) {
-    docsInstance = docs({ version: 'v1', auth: clientInstance });
+  if (!docsClient) {
+    docsClient = docs({ version: 'v1', auth: authClient });
   }
   
   return { 
-    sheets: sheetsInstance, 
-    docs: docsInstance 
+    sheets: sheetsClient, 
+    docs: docsClient 
   };
 }

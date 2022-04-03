@@ -22,6 +22,10 @@ const localization: ILocalization = {
   'sorry': {
     en: 'Sorry, this item is currently not available.',
     id: 'Maaf, barang ini sedang tidak tersedia.'
+  },
+  'already': {
+    en: 'This item is already in your bag.',
+    id: 'Barang ini sudah di dalam keranjang.'
   }
 };
 
@@ -32,7 +36,7 @@ const useVariant = (_variants: Variants): StateReturnType<IVariant> => {
   return [currentVariant, index, setIndex];
 }
 
-const useInventory = (product: IProduct, variantIndex: number): IQuantityPerSize => {
+const useInventory = (product: IProduct, variantIndex: number): QuantityPerSize => {
   const [inventory, setInventory] = useState<Quantities>();
   useEffect(() => {
     fetch('/api/inventory', { 
@@ -55,7 +59,7 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
   const { addToBag } = useBag();
 
   const [variant, variantIndex, setVariantIndex] = useVariant(product.variants);
-  const [size, setSize] = useState<keyof IQuantityPerSize>();
+  const [size, setSize] = useState<Size>();
   const quantities = useInventory(product, variantIndex);
   useEffect(() => setSize(undefined), [variantIndex]);
   
@@ -73,11 +77,14 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
       setSizeMsg(soldOut ? localization.sorry[language] : localization.pick[language]);
     }
     else {
-      addToBag({ 
+      const success = addToBag({ 
         productId: product.id, 
         variantKey: variant.key,
+        size,
         amount
       });
+
+      if (!success) setSizeMsg(localization.already[language]);
     }
   }
 
@@ -112,7 +119,7 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
           </div>
           <div>
             <div>{localization.size[language]}:<span>{sizeMsg}</span></div>
-            {(['s', 'm', 'l'] as Array<keyof IQuantityPerSize>).map((name, i) => (
+            {(['s', 'm', 'l'] as Array<Size>).map((name, i) => (
               <Fragment key={i}>
                 <input type='radio' name='size' id={name} disabled={!quantities || quantities[name] === 0}
                   checked={size === name} onChange={() => setSize(name)} />
@@ -431,12 +438,11 @@ interface IVariant {
   name: string
 }
 
-interface IQuantityPerSize {
-  s: number,
-  m: number,
-  l: number
+type QuantityPerSize = {
+  [size in Size]: number
 }
 
 export type Variants = Array<IVariant>
-type Quantities = Array<IQuantityPerSize>
+export type Size = 's' | 'm' | 'l';
+type Quantities = Array<QuantityPerSize>
 type StateReturnType<T> = [T, number, React.Dispatch<React.SetStateAction<number>>];

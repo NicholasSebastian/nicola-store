@@ -233,7 +233,6 @@ const Container = styled.div`
       border: none;
       border-bottom: 2px solid ${props => props.theme.accent};
       font-size: 15px;
-      font-family: 'Poppins', sans-serif;
       width: 300px;
 
       :focus {
