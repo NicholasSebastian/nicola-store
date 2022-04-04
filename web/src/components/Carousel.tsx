@@ -27,14 +27,13 @@ const Carousel: FC<ICarouselProps> = ({ banners }) => {
   }
 
   useEffect(() => {
-    const interval = setInterval(increment, INTERVAL);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
     windowWidth.current = window.innerWidth;
     window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+    const interval = setInterval(increment, INTERVAL);
+    return () => {
+      window.removeEventListener('resize', onResize);
+      clearInterval(interval);
+    }
   }, []);
 
   return (

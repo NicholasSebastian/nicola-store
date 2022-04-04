@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
 import { fgFromBg } from '../utils/lightOrDark';
 import SEO from '../components/SEO';
+import FormItem from '../components/FormItem';
 import Loading from '../components/Loading';
 
 const localization: ILocalization = {
@@ -47,20 +48,17 @@ const Login: FC<IPageProps> = ({ changePage }) => {
     <Container>
       <SEO pageTitle='Log In' />
       <h1>{localization.login[language]}</h1>
-      <LoginValidity />
-      <label>
-        {localization.username[language]}
-        <input type="text" placeholder='Username' value={username}
-          onChange={e => setUsername(e.target.value)} />
-      </label>
-      <label>
-        {localization.password[language]}
-        <input type={showPassword ? "text" : "password"} placeholder='Password' 
-          value={password} onChange={e => setPassword(e.target.value)} />
-        <button onClick={() => setShowPassword(!showPassword)}>
-          {showPassword ? <AiOutlineEyeInvisible size={22} /> : <AiOutlineEye size={22} />}
-        </button>
-      </label>
+      <LoginErrorMessage />
+      <FormItem label={localization.username[language]} placeholder='Username' 
+        value={username} onChange={setUsername} />
+      <FormItem label={localization.password[language]} placeholder='Password'
+        value={password} onChange={setPassword} 
+        type={showPassword ? "text" : "password"}
+        extra={
+          <button onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? <AiOutlineEyeInvisible size={22} /> : <AiOutlineEye size={22} />}
+          </button>
+        } />
       <label style={{ display: 'none' }} />
       <button onClick={onSubmit}>{localization.login[language]}</button>
       <hr />
@@ -72,6 +70,7 @@ const Login: FC<IPageProps> = ({ changePage }) => {
 const SignUp: FC<IPageProps> = ({ changePage }) => {
   const [language] = useLanguage();
 
+  // Forms in React are a pain in the butt.
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [cPassword, setCPassword] = useState('');
@@ -145,52 +144,45 @@ const SignUp: FC<IPageProps> = ({ changePage }) => {
         <Fragment>
           <h1>{localization.createAccount[language]}</h1>
           {serverError && <div>{localization.error[language]}</div>}
-          <label>
-            {localization.username[language]}
-            {errors.usernameBlank && <span>{localization.noBlank[language]}</span>}
-            {errors.usernameTaken && <span>{localization.usernameTaken[language]}</span>}
-            <input type="text" placeholder='Username' value={username}
-              onChange={e => setUsername(e.target.value)} />
-          </label>
-          <label>
-            {localization.password[language]}
-            {errors.passwordBlank && <span>{localization.noBlank[language]}</span>}
-            {errors.passwordShort && <span>{localization.passwordShort[language]}</span>}
-            <input type="password" placeholder='Password' value={password}
-              onChange={e => setPassword(e.target.value)} />
-          </label>
-          <label>
-            {localization.confirmPassword[language]}
-            {errors.passwordNoMatch && <span>{localization.passwordNoMatch[language]}</span>}
-            <input type="password" placeholder='Confirm Password' value={cPassword}
-              onChange={e => setCPassword(e.target.value)} />
-          </label>
-          <label>
-            {localization.name[language]}
-            {errors.nameBlank && <span>{localization.noBlank[language]}</span>}
-            <input type="text" placeholder='Full Name' value={fullname}
-              onChange={e => setFullname(e.target.value)} />
-          </label>
-          <label>
-            Email
-            {errors.emailBlank && <span>{localization.noBlank[language]}</span>}
-            {errors.emailInvalid && <span>{localization.emailInvalid[language]}</span>}
-            {errors.emailTaken && <span>{localization.emailTaken[language]}</span>}
-            <input type="email" placeholder='Email Address' value={email}
-              onChange={e => setEmail(e.target.value)} />
-          </label>
-          <label>
-            {localization.phone[language]}
-            {errors.phoneBlank && <span>{localization.noBlank[language]}</span>}
-            <input type="tel" placeholder='Phone Number' value={phone}
-              onChange={e => setPhone(e.target.value)} />
-          </label>
-          <label>
-            {localization.address[language]}
-            {errors.addressBlank && <span>{localization.noBlank[language]}</span>}
-            <textarea placeholder='Shipping Address' value={address}
-              onChange={e => setAddress(e.target.value)} />
-          </label>
+          <FormItem label={localization.username[language]} placeholder='Username' 
+            value={username} onChange={setUsername}
+            errorMessages={[
+              { condition: errors.usernameBlank, message: localization.noBlank[language] },
+              { condition: errors.usernameTaken, message: localization.usernameTaken[language] }
+            ]} />
+          <FormItem label={localization.password[language]} placeholder='Password' 
+            value={password} onChange={setPassword} type='password'
+            errorMessages={[
+              { condition: errors.passwordBlank, message: localization.noBlank[language] },
+              { condition: errors.passwordShort, message: localization.passwordShort[language] }
+            ]} />
+          <FormItem label={localization.confirmPassword[language]} placeholder='Confirm Password' 
+            value={cPassword} onChange={setCPassword} type="password"
+            errorMessages={[
+              { condition: errors.passwordNoMatch, message: localization.passwordNoMatch[language] }
+            ]} />
+          <FormItem label={localization.name[language]} placeholder='Full Name'
+            value={fullname} onChange={setFullname}
+            errorMessages={[
+              { condition: errors.nameBlank, message: localization.noBlank[language] }
+            ]} />
+          <FormItem label='Email' placeholder='Email Address' 
+            value={email} onChange={setEmail} type="email"
+            errorMessages={[
+              { condition: errors.emailBlank, message: localization.noBlank[language] },
+              { condition: errors.emailInvalid, message: localization.emailInvalid[language] },
+              { condition: errors.emailTaken, message: localization.emailTaken[language] }
+            ]} />
+          <FormItem label={localization.phone[language]} placeholder='Phone Number'
+            value={phone} onChange={setPhone} type="tel"
+            errorMessages={[
+              { condition: errors.phoneBlank, message: localization.noBlank[language] }
+            ]} />
+          <FormItem label={localization.address[language]} placeholder='Shipping Address'
+            value={address} onChange={setAddress} type='textarea'
+            errorMessages={[
+              { condition: errors.addressBlank, message: localization.noBlank[language] }
+            ]} />
           <label>
             <input type='checkbox' checked={newsletter} onChange={() => setNewsletter(!newsletter)} />
             {localization.newsletter[language]}
@@ -206,7 +198,7 @@ const SignUp: FC<IPageProps> = ({ changePage }) => {
   );
 }
 
-const LoginValidity: FC = () => {
+const LoginErrorMessage: FC = () => {
   if (typeof window !== 'undefined') {
     const params = new URLSearchParams(window.location.search);
     if (params.has('error')) {
@@ -241,79 +233,32 @@ const Container = styled.div`
     font-size: 14px;
   }
 
-  > label {
-    display: block;
-    margin-top: 20px;
-    position: relative;
+  // Sign-up page Newsletter checkbox.
+  > label:last-of-type {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    font-size: 14px;
+    user-select: none;
+    margin-bottom: 20px;
 
-    // Form fields.
-    :not(:last-of-type) {
-      font-size: 12px;
-      font-weight: 600;
-
-      > span {
-        color: #f44;
-        font-weight: 400;
-        margin-left: 10px;
-      }
-      
-      > input, > textarea {
-        width: 100%;
-        background: transparent;
-        border: 1px solid ${props => props.theme.accent};
-        padding: 10px;
-        margin-top: 2px;
-
-        :focus {
-          outline: none;
-        }
-      }
-
-      > textarea {
-        resize: vertical;
-        min-height: 64px;
-      }
-
-      > button {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-
-        background: none;
-        border: none;
-        display: flex;
-        align-items: center;
-        padding: 10px;
-
-        :hover {
-          cursor: pointer;
-        }
-      }
+    > input {
+      margin: 0;
+      margin-right: 8px;
     }
 
-    // Sign-up page Newsletter checkbox.
-    :last-of-type {
-      display: flex;
-      justify-content: start;
-      align-items: center;
-      font-size: 14px;
-      user-select: none;
-      margin-bottom: 20px;
-
-      > input {
-        margin: 0;
-        margin-right: 8px;
-      }
-
-      :hover {
-        cursor: pointer;
-      }
+    :hover {
+      cursor: pointer;
     }
   }
 
   > span:last-of-type {
     color: #f44;
     font-size: 12px;
+  }
+
+  > label + div {
+    margin-bottom: 20px;
   }
 
   > button {
@@ -330,10 +275,6 @@ const Container = styled.div`
       cursor: pointer;
       background-color: ${props => props.theme.bg};
       color: ${props => fgFromBg(props.theme.bg)};
-    }
-
-    :first-of-type {
-      margin-top: 25px;
     }
   }
 

@@ -58,23 +58,23 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
   const [language] = useLanguage();
   const { addToBag } = useBag();
 
+  // State
   const [variant, variantIndex, setVariantIndex] = useVariant(product.variants);
-  const [size, setSize] = useState<Size>();
   const quantities = useInventory(product, variantIndex);
-  useEffect(() => setSize(undefined), [variantIndex]);
-  
+  const [size, setSize] = useState<Size>();
   const [amount, setAmount] = useState<number>(1);
-  useEffect(() => setAmount(1), [variantIndex, size]);
+  const [message, setMessage] = useState<string>();
 
-  // UI state only.
-  const [sizeMsg, setSizeMsg] = useState<string>();
-  useEffect(() => setSizeMsg(undefined), [size, language]);
+  // State reset conditions
+  useEffect(() => setSize(undefined), [variantIndex]);
+  useEffect(() => setAmount(1), [variantIndex, size]);
+  useEffect(() => setMessage(undefined), [size, language]);
 
   const soldOut = quantities && Object.values(quantities).every(qty => qty === 0);
 
   const handleAddToBag: React.MouseEventHandler = () => {
     if (!size) {
-      setSizeMsg(soldOut ? localization.sorry[language] : localization.pick[language]);
+      setMessage(soldOut ? localization.sorry[language] : localization.pick[language]);
     }
     else {
       const success = addToBag({ 
@@ -84,7 +84,7 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
         amount
       });
 
-      if (!success) setSizeMsg(localization.already[language]);
+      if (!success) setMessage(localization.already[language]);
     }
   }
 
@@ -118,7 +118,7 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
             ))}
           </div>
           <div>
-            <div>{localization.size[language]}:<span>{sizeMsg}</span></div>
+            <div>{localization.size[language]}:<span>{message}</span></div>
             {(['s', 'm', 'l'] as Array<Size>).map((name, i) => (
               <Fragment key={i}>
                 <input type='radio' name='size' id={name} disabled={!quantities || quantities[name] === 0}

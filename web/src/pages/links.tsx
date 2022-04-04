@@ -37,7 +37,7 @@ const Container = styled.div`
   align-items: center;
   padding: 50px 0;
 
-  > *:not(:last-child){
+  > *:not(:last-child) {
     margin-bottom: 20px;
   }
 
