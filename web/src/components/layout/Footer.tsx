@@ -3,7 +3,7 @@ import Link from "next/link";
 import styled, { useTheme } from "styled-components";
 import { FaInstagramSquare, FaLine, FaWhatsappSquare } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
-import { fgFromBg } from '../utils/lightOrDark';
+import { fgFromBg } from '../../utils/lightOrDark';
 
 const copyright = "lanica";
 const email = "lanicathelabel@gmail.com";
@@ -23,10 +23,10 @@ const Footer: FC = () => {
   return (
     <Container>
       <div>
-        <Link href="/returns-policy">Returns Policy</Link>
-        <Link href="/privacy-policy">Privacy Policy</Link>
-        <Link href="/shipping-policy">Shipping Policy</Link>
-        <Link href="/terms-and-conditions">Terms and Conditions</Link>
+        <Link href="/legal/returns-policy">Returns Policy</Link>
+        <Link href="/legal/privacy-policy">Privacy Policy</Link>
+        <Link href="/legal/shipping-policy">Shipping Policy</Link>
+        <Link href="/legal/terms-and-conditions">Terms and Conditions</Link>
       </div>
       <div>
         <h4>Contact Us</h4>

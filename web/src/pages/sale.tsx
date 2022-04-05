@@ -1,7 +1,7 @@
 import React, { FC, Fragment } from 'react';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import sanity from '../lib/sanity';
-import GridLayout from '../components/GridLayout';
+import GridLayout from '../components/presets/GridLayout';
 import SEO from '../components/SEO';
 
 const OnSale: FC = (props: InferGetStaticPropsType<typeof getStaticProps>) => (

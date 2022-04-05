@@ -4,7 +4,7 @@ import { SessionProvider } from 'next-auth/react';
 import { BagProvider } from '../hooks/useBag';
 import { CurrencyProvider } from '../hooks/useCurrency';
 import { LanguageProvider } from '../hooks/useLanguage';
-import Layout from '../components/Layout';
+import Layout from '../components/layout/Layout';
 
 const theme = {
   bg: '#f9f2ee',
@@ -17,6 +17,29 @@ const fontColors = {
   light: '#f9f2ee',
   dark: '#6b4942'
 }
+
+export default ({ Component, pageProps: { session, ...pageProps } }) => {
+  return (
+    <Fragment>
+      <GlobalStyles />
+      <SessionProvider session={session}>
+        <CurrencyProvider>
+          <LanguageProvider>
+            <ThemeProvider theme={theme}>
+              <BagProvider>
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </BagProvider>
+            </ThemeProvider>
+          </LanguageProvider>
+        </CurrencyProvider>
+      </SessionProvider>
+    </Fragment>
+  );
+};
+
+export { fontColors };
 
 const GlobalStyles = createGlobalStyle`
   * {
@@ -45,26 +68,3 @@ const GlobalStyles = createGlobalStyle`
     color: ${fontColors.dark};
   }
 `;
-
-export { fontColors };
-
-export default ({ Component, pageProps: { session, ...pageProps } }) => {
-  return (
-    <Fragment>
-      <GlobalStyles />
-      <SessionProvider session={session}>
-        <CurrencyProvider>
-          <LanguageProvider>
-            <ThemeProvider theme={theme}>
-              <BagProvider>
-                <Layout>
-                  <Component {...pageProps} />
-                </Layout>
-              </BagProvider>
-            </ThemeProvider>
-          </LanguageProvider>
-        </CurrencyProvider>
-      </SessionProvider>
-    </Fragment>
-  );
-};

@@ -6,11 +6,11 @@ import { useRouter } from "next/router";
 import { useSession, signIn } from "next-auth/react";
 import styled, { useTheme } from "styled-components";
 
-import { fgFromBg } from "../utils/lightOrDark";
-import useBag from "../hooks/useBag";
-import useCurrency from "../hooks/useCurrency";
-import useLanguage, { Language } from "../hooks/useLanguage";
-import logo from '../../public/logo.png';
+import { fgFromBg } from "../../utils/lightOrDark";
+import useBag from "../../hooks/useBag";
+import useCurrency from "../../hooks/useCurrency";
+import useLanguage, { Language } from "../../hooks/useLanguage";
+import logo from '../../../public/logo.png';
 
 const navigationPaths = [
   { name: 'New Arrivals', path: '/new-arrivals' },

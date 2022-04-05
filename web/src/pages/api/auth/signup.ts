@@ -40,11 +40,6 @@ async function createAccount(account: any) {
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== 'GET') {
-    res.status(400).end();
-    return;
-  }
-
   const { username, password, cPassword, fullname, email, phone, address } = req.body;
   const usernameBlank = (username.length === 0);
   const emailBlank = (email.length === 0);

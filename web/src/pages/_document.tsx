@@ -4,9 +4,8 @@ import { ServerStyleSheet } from 'styled-components';
 const googleFonts = "https://fonts.googleapis.com/css2?family=Oswald:wght@600&family=Poppins&display=swap";
 
 export default class MyDocument extends Document {
-  
-  // Allows styled-components to work with next.js
   static async getInitialProps(ctx) {
+    // Allows styled-components to work with next.js
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
 

@@ -12,6 +12,8 @@ const BannerWithLink: FC<IBannerProps> = props => {
   return <Banner {...props}><div /></Banner>
 }
 
+export default BannerWithLink;
+
 const Banner = styled.div<IBannerProps>`
   overflow: hidden;
   position: relative;
@@ -56,8 +58,6 @@ const Banner = styled.div<IBannerProps>`
     }
   }
 `;
-
-export default BannerWithLink;
 
 interface IBannerProps {
   href?: string

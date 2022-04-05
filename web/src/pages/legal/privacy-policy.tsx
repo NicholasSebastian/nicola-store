@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import getDocument from '../utils/getDocument';
-import TextLayout from '../components/TextLayout';
+import getDocument from '../../utils/getDocument';
+import TextLayout from '../../components/presets/TextLayout';
 
 const ENGLISH_ID = "1gJ-Bms_azOlqhBflSd7RIQNBraxK6wY3oFsje2bPWb8";
 const BAHASA_ID = "1B8d6FnIv6h80RWjhVcxmleeTCddX7V4SfYwRbBMi1y4";

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import useLanguage from '../hooks/useLanguage';
-import SEO from '../components/SEO';
+import useLanguage from '../../hooks/useLanguage';
+import SEO from '../SEO';
 
 const TextLayout: FC<IContent> = (props) => {
   const [language] = useLanguage();

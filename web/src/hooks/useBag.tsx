@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect, useContext, createContext, useRef } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import styled from 'styled-components';
-import ShoppingBag from '../components/ShoppingBag';
+import ShoppingBag from '../components/layout/ShoppingBag';
 import Loading from '../components/Loading';
 import { Size } from '../pages/product/[slug]';
 

@@ -1,7 +1,7 @@
 import React, { FC, ReactElement, HTMLInputTypeAttribute } from 'react';
 import styled from 'styled-components';
 
-const FormItem: FC<IFormItemProps> = props => {
+const FormInput: FC<IFormInputProps> = props => {
   const { label, value, onChange, placeholder, type, errorMessages, extra } = props;
   return (
     <Container>
@@ -15,19 +15,19 @@ const FormItem: FC<IFormItemProps> = props => {
         <input type={type ?? 'text'} placeholder={placeholder} disabled={!onChange}
           value={value} onChange={e => onChange(e.target.value)} />
       )}
-      {extra}
+      {extra && <div>{extra}</div>}
     </Container>
   );
 }
 
-export default FormItem;
+export default FormInput;
 
 const Container = styled.label`
   display: block;
   margin-bottom: 20px;
-  position: relative;
   font-size: 12px;
   font-weight: 600;
+  position: relative;
 
   > span {
     color: #f44;
@@ -52,24 +52,28 @@ const Container = styled.label`
     min-height: 64px;
   }
 
-  > button {
+  > div:last-child {
     position: absolute;
     bottom: 0;
     right: 0;
-
-    background: none;
-    border: none;
     display: flex;
-    align-items: center;
-    padding: 10px;
+    padding-right: 6px;
 
-    :hover {
-      cursor: pointer;
+    > * {
+      background: none;
+      border: none;
+      display: flex;
+      align-items: center;
+      padding: 10px 4px;
+
+      :hover {
+        cursor: pointer;
+      }
     }
   }
 `;
 
-interface IFormItemProps {
+interface IFormInputProps {
   label: string
   value: string
   onChange?: (value: string) => void

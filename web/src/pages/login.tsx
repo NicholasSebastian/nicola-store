@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
 import { fgFromBg } from '../utils/lightOrDark';
 import SEO from '../components/SEO';
-import FormItem from '../components/FormItem';
+import FormInput from '../components/FormInput';
 import Loading from '../components/Loading';
 
 const localization: ILocalization = {
@@ -49,9 +49,9 @@ const Login: FC<IPageProps> = ({ changePage }) => {
       <SEO pageTitle='Log In' />
       <h1>{localization.login[language]}</h1>
       <LoginErrorMessage />
-      <FormItem label={localization.username[language]} placeholder='Username' 
+      <FormInput label={localization.username[language]} placeholder='Username' 
         value={username} onChange={setUsername} />
-      <FormItem label={localization.password[language]} placeholder='Password'
+      <FormInput label={localization.password[language]} placeholder='Password'
         value={password} onChange={setPassword} 
         type={showPassword ? "text" : "password"}
         extra={
@@ -144,41 +144,41 @@ const SignUp: FC<IPageProps> = ({ changePage }) => {
         <Fragment>
           <h1>{localization.createAccount[language]}</h1>
           {serverError && <div>{localization.error[language]}</div>}
-          <FormItem label={localization.username[language]} placeholder='Username' 
+          <FormInput label={localization.username[language]} placeholder='Username' 
             value={username} onChange={setUsername}
             errorMessages={[
               { condition: errors.usernameBlank, message: localization.noBlank[language] },
               { condition: errors.usernameTaken, message: localization.usernameTaken[language] }
             ]} />
-          <FormItem label={localization.password[language]} placeholder='Password' 
+          <FormInput label={localization.password[language]} placeholder='Password' 
             value={password} onChange={setPassword} type='password'
             errorMessages={[
               { condition: errors.passwordBlank, message: localization.noBlank[language] },
               { condition: errors.passwordShort, message: localization.passwordShort[language] }
             ]} />
-          <FormItem label={localization.confirmPassword[language]} placeholder='Confirm Password' 
+          <FormInput label={localization.confirmPassword[language]} placeholder='Confirm Password' 
             value={cPassword} onChange={setCPassword} type="password"
             errorMessages={[
               { condition: errors.passwordNoMatch, message: localization.passwordNoMatch[language] }
             ]} />
-          <FormItem label={localization.name[language]} placeholder='Full Name'
+          <FormInput label={localization.name[language]} placeholder='Full Name'
             value={fullname} onChange={setFullname}
             errorMessages={[
               { condition: errors.nameBlank, message: localization.noBlank[language] }
             ]} />
-          <FormItem label='Email' placeholder='Email Address' 
+          <FormInput label='Email' placeholder='Email Address' 
             value={email} onChange={setEmail} type="email"
             errorMessages={[
               { condition: errors.emailBlank, message: localization.noBlank[language] },
               { condition: errors.emailInvalid, message: localization.emailInvalid[language] },
               { condition: errors.emailTaken, message: localization.emailTaken[language] }
             ]} />
-          <FormItem label={localization.phone[language]} placeholder='Phone Number'
+          <FormInput label={localization.phone[language]} placeholder='Phone Number'
             value={phone} onChange={setPhone} type="tel"
             errorMessages={[
               { condition: errors.phoneBlank, message: localization.noBlank[language] }
             ]} />
-          <FormItem label={localization.address[language]} placeholder='Shipping Address'
+          <FormInput label={localization.address[language]} placeholder='Shipping Address'
             value={address} onChange={setAddress} type='textarea'
             errorMessages={[
               { condition: errors.addressBlank, message: localization.noBlank[language] }

@@ -1,10 +1,10 @@
 import React, { FC, useMemo } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
-import useBag, { BagConsumer, IItemData } from '../hooks/useBag';
-import { fgFromBg } from '../utils/lightOrDark';
-import imageUrlFor from '../utils/imageUrlFor';
-import formatCurrency from '../utils/formatCurrency';
+import useBag, { BagConsumer, IItemData } from '../../hooks/useBag';
+import { fgFromBg } from '../../utils/lightOrDark';
+import imageUrlFor from '../../utils/imageUrlFor';
+import formatCurrency from '../../utils/formatCurrency';
 
 const IMAGE_WIDTH = 60;
 
