@@ -57,14 +57,14 @@ const Container = styled.label`
     bottom: 0;
     right: 0;
     display: flex;
-    padding-right: 6px;
+    padding-right: 7px;
 
     > * {
       background: none;
       border: none;
       display: flex;
       align-items: center;
-      padding: 10px 4px;
+      padding: 10px 3px;
 
       :hover {
         cursor: pointer;
