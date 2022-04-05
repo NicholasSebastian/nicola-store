@@ -22,8 +22,16 @@ const Banner = styled.div<IBannerProps>`
     background: url(${props => props.src});
     background-size: cover;
     background-position: center;
-    height: ${props => props.height ?? '60vh'};
+    height: ${props => `${props.height[0]}px`};
     transition: all 500ms ease-in-out;
+
+    @media only screen and (min-width: 600px) {
+      height: ${props => `${props.height[1]}px`};
+    }
+
+    @media only screen and (min-width: 1024px) {
+      height: ${props => `${props.height[2]}px`};
+    }
   }
 
   ::after {
@@ -63,7 +71,7 @@ interface IBannerProps {
   href?: string
   src: string
   text?: string
-  height?: string
+  height: [number, number, number]
   fontScaling?: number
   zoom?: boolean
 }

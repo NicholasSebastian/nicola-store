@@ -8,6 +8,7 @@ import { fgFromBg } from '../utils/lightOrDark';
 import SEO from '../components/SEO';
 import FormInput from '../components/FormInput';
 import Loading from '../components/Loading';
+import Button from '../components/Button';
 
 const localization: ILocalization = {
   'login': { en: 'Log In', id: 'Masuk' },
@@ -60,9 +61,9 @@ const Login: FC<IPageProps> = ({ changePage }) => {
           </button>
         } />
       <label style={{ display: 'none' }} />
-      <button onClick={onSubmit}>{localization.login[language]}</button>
+      <Button primary onClick={onSubmit}>{localization.login[language]}</Button>
       <hr />
-      <button onClick={changePage}>{localization.signup[language]}</button>
+      <Button primary onClick={changePage}>{localization.signup[language]}</Button>
     </Container>
   );
 }
@@ -189,11 +190,11 @@ const SignUp: FC<IPageProps> = ({ changePage }) => {
           </label>
           {recaptchaError && <span>{localization.recaptcha[language]}</span>}
           <ReCaptcha sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_KEY} onChange={val => setNotRobot(!!val)} />
-          <button onClick={onSubmit}>{localization.signup[language]}</button>
+          <Button primary onClick={onSubmit}>{localization.signup[language]}</Button>
           <hr />
         </Fragment>
       )}
-      <button onClick={onLeave}>{localization.backToLogin[language]}</button>
+      <Button primary onClick={onLeave}>{localization.backToLogin[language]}</Button>
     </Container>
   );
 }
@@ -257,24 +258,12 @@ const Container = styled.div`
     font-size: 12px;
   }
 
-  > label + div {
-    margin-bottom: 20px;
-  }
-
   > button {
     width: 100%;
-    background: ${props => props.theme.accent};
-    color: ${props => fgFromBg(props.theme.accent)};
-    border: 1px solid ${props => props.theme.accent};
     padding: 10px 0;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 100ms linear;
 
-    :hover {
-      cursor: pointer;
-      background-color: ${props => props.theme.bg};
-      color: ${props => fgFromBg(props.theme.bg)};
+    :first-of-type {
+      margin-top: 20px;
     }
   }
 

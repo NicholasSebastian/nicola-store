@@ -10,6 +10,7 @@ import useBag from '../../hooks/useBag';
 import useLanguage, { ILocalization, Language } from '../../hooks/useLanguage';
 import SEO from '../../components/SEO';
 import Gallery from '../../components/Gallery';
+import Button from '../../components/Button';
 
 const localization: ILocalization = {
   'sold': { en: 'Sold Out', id: 'Stok Habis' },
@@ -102,6 +103,7 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
             {(product.discount > 0) && <span>{product.discount + '%'}</span>}
           </div>
           <div>
+            {!quantities && <span style={{ fontSize: 13 }}>Checking inventory...</span>}
             {soldOut && <b>{localization.sold[language].toUpperCase()}</b>}
             {quantities && size && (
               <span><b>{localization.stock[language]}:</b> {`${quantities[size]} (Size: ${size.toUpperCase()})`}</span>
@@ -137,9 +139,9 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
             )}
           </div>
           <div>
-            <button onClick={handleAddToBag}>{localization.bag[language]}</button>
-            <a href={product.shopee}><button disabled={!product.shopee}>Shopee</button></a>
-            <a href={product.tokopedia}><button disabled={!product.tokopedia}>Tokopedia</button></a>
+            <Button onClick={handleAddToBag}>{localization.bag[language]}</Button>
+            <a href={product.shopee}><Button disabled={!product.shopee}>Shopee</Button></a>
+            <a href={product.tokopedia}><Button disabled={!product.tokopedia}>Tokopedia</Button></a>
           </div>
           <PortableText content={product.description[language]} />
           {product.moreInfo && (
@@ -328,27 +330,11 @@ const Container = styled.div`
       grid-gap: 5px;
       
       button {
-        background-color: transparent;
-        color: var(--foregroundColor);
-        border: 1px solid ${props => props.theme.accent};
-        display: block;
         width: 100%;
         padding: 8px 0;
-        font-size: 14px;
-        transition: all 100ms linear;
 
         :first-of-type {
           grid-column: 1 / 3;
-        }
-
-        :disabled {
-          background-color: ${props => props.theme.shadow};
-        }
-
-        :hover:not([disabled]) {
-          cursor: pointer;
-          background-color: ${props => props.theme.accent};
-          color: ${props => fgFromBg(props.theme.accent)};
         }
       }
     }

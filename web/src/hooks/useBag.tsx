@@ -95,7 +95,14 @@ const BagConsumer: FC<IBagConsumerProps> = ({ children }) => {
 
   // Only return the items that exist in the bag. 
   // This is to fix an issue when deleting items because the item data lags behind.
-  const syncedItems = items.filter(i => bag.some(item => item.variantKey === i.variantKey));
+  const syncedItems = items.reduce((acc, i) => {
+    const match = bag.find(item => item.variantKey === i.variantKey);
+    if (match) {
+      const { amount, size } = match;
+      acc.push({ ...i, amount, size });
+    }
+    return acc;
+  }, []);
 
   return loading ? <Loading /> : children(syncedItems);
 }
@@ -160,12 +167,10 @@ interface IItem {
   size: Size
 }
 
-export interface IItemData {
-  productId: string
+export interface IItemData extends IItem {
   name: string
   price: number
   discount: number
-  variantKey: string
   variant: string
   image: string
 }

@@ -1,8 +1,8 @@
 import React, { FC, useState } from 'react';
 import styled from 'styled-components';
-import useLanguage, { ILocalization, Language } from '../hooks/useLanguage';
-import { fgFromBg } from '../utils/lightOrDark';
-import Item from '../components/Item';
+import useLanguage, { ILocalization, Language } from '../../hooks/useLanguage';
+import { fgFromBg } from '../../utils/lightOrDark';
+import Item from '../../components/Item';
 
 // TODO: Pagination.
 

@@ -40,7 +40,7 @@ const Carousel: FC<ICarouselProps> = ({ banners }) => {
     <Container ref={containerRef} 
       displacement={containerRef.current ? (containerRef.current.offsetWidth * index * -1) : 0}>
       {banners.map((banner, i) => (
-        <Banner key={i} src={banner.image} href={banner.path} text={banner.text} />
+        <Banner key={i} src={banner.image} href={banner.path} text={banner.text} height={[450, 525, 600]} />
       ))}
       <div>
         {banners.map((_, i) => (

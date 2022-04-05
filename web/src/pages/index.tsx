@@ -7,6 +7,7 @@ import useLanguage, { ILocalization } from '../hooks/useLanguage';
 import imageUrlFor from '../utils/imageUrlFor';
 import { fgFromBg } from '../utils/lightOrDark';
 import SEO from '../components/SEO';
+import Button from '../components/Button';
 import Carousel, { IBannerData } from '../components/Carousel';
 import Banner from '../components/Banner';
 import Item from '../components/Item';
@@ -52,7 +53,7 @@ const Index: FC<IHomeContent> = (props) => {
       <section>
         {grid.map((item, i) => (
           <Banner key={i} src={item.image} href={item.path} 
-            text={item.text} height='20vw' fontScaling={5} zoom />
+            text={item.text} height={[110, 205, 300]} fontScaling={5} zoom />
         ))}
       </section>
       <section>
@@ -62,9 +63,9 @@ const Index: FC<IHomeContent> = (props) => {
             <Item key={i} item={item} />
           ))}
         </div>
-        <Link href='/new-arrivals'><button>See More</button></Link>
+        <Link href='/new-arrivals'><Button primary>See More</Button></Link>
       </section>
-      <Banner src={bannerMiddle} height='20vw' />
+      <Banner src={bannerMiddle} height={[250, 375, 500]} />
       {/* TODO: Instagram posts here; make an API route to get the images with phantomJS.
         <section>
           <h2>Check out our Instagram</h2>
@@ -82,7 +83,7 @@ const Index: FC<IHomeContent> = (props) => {
         ) : (
           <Fragment>
             <input value={newsletter} onChange={e => setNewsletter(e.target.value)} placeholder="your@email.com" />
-            <button onClick={subscribeNewsletter}>{localization.subscribe[language]}</button>
+            <Button primary onClick={subscribeNewsletter}>{localization.subscribe[language]}</Button>
           </Fragment>
         )}
       </div>
@@ -131,23 +132,6 @@ const Container = styled.div`
 
     @media only screen and (min-width: 1024px) {
       font-size: 32px;
-    }
-  }
-
-  button {
-    padding: 12px 30px;
-    background-color: ${props => props.theme.accent};
-    color: ${props => fgFromBg(props.theme.accent)};
-    border: 1px solid transparent;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 100ms linear;
-
-    :hover {
-      cursor: pointer;
-      background-color: ${props => props.theme.bg};
-      color: var(--foregroundColor);
-      border-color: ${props => props.theme.accent};
     }
   }
 

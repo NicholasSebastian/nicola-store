@@ -5,13 +5,13 @@ import useBag, { BagConsumer, IItemData } from '../../hooks/useBag';
 import { fgFromBg } from '../../utils/lightOrDark';
 import imageUrlFor from '../../utils/imageUrlFor';
 import formatCurrency from '../../utils/formatCurrency';
+import Button from '../Button';
 
 const IMAGE_WIDTH = 60;
 
 const ItemEntry: FC<IItemProps> = props => {
-  const { bag, setBag } = useBag();
+  const { setBag } = useBag();
   const { item } = props;
-  const { size, amount } = bag.find(i => i.variantKey === item.variantKey);
   const image = useMemo(() => imageUrlFor(item.image).width(IMAGE_WIDTH).url(), [item.image]);
 
   const updateAmount = (increment: Incrementor) => setBag(bag => {
@@ -30,13 +30,14 @@ const ItemEntry: FC<IItemProps> = props => {
       <div><img src={image} alt="Product Image" /></div>
       <div>
         <span>{item.name}</span>
-        <div>{`${item.variant} (${size.toUpperCase()})`}</div>
+        <div>{`${item.variant} (${item.size.toUpperCase()})`}</div>
         <div>{formatCurrency(item.price)}</div>
+        {/* TODO: Show Discounts here */}
       </div>
       <div><button onClick={removeItem}>Remove</button></div>
       <div>
         <button onClick={() => updateAmount(i => (i > 1) ? (i - 1) : i)}>-</button>
-        <div>{amount}</div>
+        <div>{item.amount}</div>
         <button onClick={() => updateAmount(i => i + 1)}>+</button>
       </div>
     </ItemContainer>
@@ -56,7 +57,7 @@ const ShoppingBag: FC = () => {
       </BagConsumer>
       <div>
         <Link href='/checkout'>
-          <button onClick={closeBag}>Checkout</button>
+          <Button primary onClick={closeBag}>Checkout</Button>
         </Link>
       </div>
     </Container>
@@ -85,22 +86,7 @@ const Container = styled.div`
     bottom: 0;
 
     > button {
-      display: block;
       width: 100%;
-      padding: 12px 0;
-      background-color: ${props => props.theme.accent};
-      color: ${props => fgFromBg(props.theme.accent)};
-      border: 1px solid transparent;
-      font-size: 14px;
-      font-weight: 600;
-      transition: all 100ms linear;
-
-      :hover {
-        cursor: pointer;
-        background-color: ${props => props.theme.bg};
-        color: ${props => fgFromBg(props.theme.bg)};
-        border-color: ${props => props.theme.accent};
-      }
     }
   }
 `;

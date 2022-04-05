@@ -1,10 +1,11 @@
-import React, { FC, Fragment, useEffect, useState } from 'react';
+import React, { FC, Fragment, useState } from 'react';
 import ReCaptcha from 'react-google-recaptcha';
 import { BiCalendarMinus, BiCalendarPlus } from 'react-icons/bi';
 import styled from 'styled-components';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
 import FormInput from '../components/FormInput';
 import FormOption from '../components/FormOption';
+import Button from '../components/Button';
 
 const localization: ILocalization = {
   'confirmation': { en: 'Payment Confirmation', id: 'Konfirmasi Pembayaran' },
@@ -27,8 +28,6 @@ const ConfirmPayment: FC = () => {
   const [bankName, setBankName] = useState('');
   const [amount, setAmount] = useState('');
   const [notRobot, setNotRobot] = useState(false);
-  
-  useEffect(() => console.log(bank), [bank]);
 
   const onSubmit = () => {
     // TODO
@@ -71,7 +70,7 @@ const ConfirmPayment: FC = () => {
           <ReCaptcha sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_KEY} onChange={val => setNotRobot(!!val)} />
         </div>
       </div>
-      <button onClick={onSubmit}>{localization.confirm[language]}</button>
+      <Button primary onClick={onSubmit}>{localization.confirm[language]}</Button>
     </Container>
   );
 }
@@ -88,6 +87,10 @@ const Container = styled.div`
     font-size: 28px;
   }
 
+  > button {
+    margin: 30px auto 0 auto;
+  }
+
   @media only screen and (min-width: 800px) {
     max-width: 680px;
 
@@ -98,6 +101,10 @@ const Container = styled.div`
       > div {
         width: 320px;
       }
+    }
+
+    > button {
+      margin-top: 20px;
     }
   }
 `;

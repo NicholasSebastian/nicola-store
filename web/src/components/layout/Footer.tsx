@@ -1,4 +1,5 @@
 import React, { FC, useRef } from 'react';
+import { useRouter } from 'next/router';
 import Link from "next/link";
 import styled, { useTheme } from "styled-components";
 import { FaInstagramSquare, FaLine, FaWhatsappSquare } from "react-icons/fa";
@@ -18,10 +19,11 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsapp}`;
 
 const Footer: FC = () => {
   const theme: any = useTheme();
+  const { pathname } = useRouter();
   const foregroundColor = fgFromBg(theme.accent);
   const currentYear = useRef(new Date().getFullYear()).current;
   return (
-    <Container>
+    <Container exception={pathname === '/checkout'}>
       <div>
         <Link href="/legal/returns-policy">Returns Policy</Link>
         <Link href="/legal/privacy-policy">Privacy Policy</Link>
@@ -42,7 +44,7 @@ const Footer: FC = () => {
 
 export default Footer;
 
-const Container = styled.footer`
+const Container = styled.footer<IStyleArguments>`
   --foregroundColor: ${props => fgFromBg(props.theme.accent)};
 
   background-color: ${props => props.theme.accent};
@@ -84,6 +86,10 @@ const Container = styled.footer`
     font-size: 10px;
   }
 
+  @media only screen and (max-width: 900px) {
+    display: ${props => props.exception ? 'none' : 'block'};
+  }
+
   @media only screen and (min-width: 700px) {
     padding-top: 50px;
     padding-left: 0;
@@ -118,3 +124,7 @@ const Container = styled.footer`
     }
   }
 `;
+
+interface IStyleArguments {
+  exception: boolean
+}

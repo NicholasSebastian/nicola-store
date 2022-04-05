@@ -19,15 +19,19 @@
 - Language toggle for header and footer elements.
 - Footer social links.
 
-- Product Page recommendations.
+- Sync Shopping Bag to database.
 
 ## Even Smaller, Less Important Stuff
 
+- Remove the use of the 'fgFromBg' function.
+- Product Page recommendations.
 - Like the categories page, but for collections.
+- Shipping prices from Sanity.
+- Promo codes at checkout?
+- Instagram posts on home screen.
+- Home page pop-up.
 - In-Website chat.
 - Schema Markup for SEO.
-- Home page pop-up.
-- Instagram posts on home screen.
 
 ## Known Bugs
 

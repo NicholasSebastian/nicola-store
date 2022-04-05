@@ -37,7 +37,7 @@ const Container = styled.label`
   
   > input, > textarea {
     width: 100%;
-    background: transparent;
+    background: #fff;
     border: 1px solid ${props => props.theme.accent};
     padding: 10px;
     margin-top: 2px;
