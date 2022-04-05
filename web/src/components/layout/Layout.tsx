@@ -21,6 +21,6 @@ const Container = styled.div`
   position: relative;
 
   > main {
-    min-height: calc(100vh - 300px);
+    min-height: calc(100vh - 250px);
   }
 `;

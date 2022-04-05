@@ -76,7 +76,7 @@ const Header: FC<IHeaderProps> = ({ message }) => {
   );
 
   return (
-    <Container>
+    <Container exception={router.pathname === '/checkout'}>
       <div style={{ display: message ? 'block' : 'none' }}>{message}</div>
       <div>
         <Link href='/'>
@@ -106,7 +106,7 @@ export default Header;
 
 const breakpoint = 900;
 
-const Container = styled.nav`
+const Container = styled.nav<IStyleArguments>`
   --foregroundColor: ${props => fgFromBg(props.theme.bg)};
   --accentTextColor: ${props => fgFromBg(props.theme.accent)};
 
@@ -351,7 +351,7 @@ const Container = styled.nav`
       // Navigation Container
       > div:first-of-type {
         width: 920px;
-        display: flex;
+        display: ${props => props.exception ? 'none' : 'flex'};
         justify-content: space-evenly;
         margin-top: 30px;
 
@@ -370,6 +370,10 @@ const Container = styled.nav`
 
 interface IHeaderProps {
   message?: string
+}
+
+interface IStyleArguments {
+  exception: boolean
 }
 
 type ILanguageMap = { 
