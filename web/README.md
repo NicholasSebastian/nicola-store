@@ -46,3 +46,7 @@ Currently:
 - Product Inventory, Customer Orders and Newsletter registrants are stored in Google Sheets.
 
 This works, but can be quite a pain in the ass.
+
+Ideally, in the end, everything in Sanity should be migrated to Firestore.
+Build a completely customized admin dashboard.
+Then after all that is done, maybe slowly migrate Google Sheets to Firestore and the dashboard too.
