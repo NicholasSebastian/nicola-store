@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import getDocument from '../../utils/getDocument';
+import GenerateProps from '../../server-props/legal';
 import TextLayout from '../../components/presets/TextLayout';
 
 const ENGLISH_ID = "1OimW1usf8t5OWSAe6YS4SnUPZcLQwNHwKfsL8SOfq_w";
@@ -13,12 +13,4 @@ const ReturnsPolicy: FC = (props: InferGetStaticPropsType<typeof getStaticProps>
 );
 
 export default ReturnsPolicy;
-
-export const getStaticProps: GetStaticProps = async () => {
-  return {
-    props: {
-      en: await getDocument(ENGLISH_ID),
-      id: await getDocument(BAHASA_ID)
-    }
-  };
-};
+export const getStaticProps: GetStaticProps = GenerateProps(ENGLISH_ID, BAHASA_ID);

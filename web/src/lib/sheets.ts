@@ -26,6 +26,7 @@ class Sheets {
   }
 
   public async addSheet(title: string) {
+    console.log(`Adding a new sheet with name '${title}'...`); // temp
     await this.instance.spreadsheets.batchUpdate({ 
       spreadsheetId: this.sheetId,
       requestBody: {
@@ -38,6 +39,7 @@ class Sheets {
   }
 
   public async addRow(sheet: string, row: any[]) {
+    console.log(`Adding row with values (${row.join(',')})`); // temp
     await this.addRows(sheet, [row]);
   }
 
@@ -46,6 +48,7 @@ class Sheets {
     const rangeStart = 'A';
     const rangeEnd = String.fromCharCode(rangeStart.charCodeAt(0) + rowLength);
 
+    console.log(`Adding ${rows.length} row(s) to range '${sheet}!${rangeStart}:${rangeEnd}'.`); // temp
     await this.instance.spreadsheets.values.append({
       spreadsheetId: this.sheetId, 
       range: `${sheet}!${rangeStart}:${rangeEnd}`,
@@ -55,11 +58,13 @@ class Sheets {
   }
 
   public async getRows(sheet: string, rangeFrom: string, rangeTo: string) {
+    console.log(`Fetching rows from range '${sheet}!${rangeFrom}:${rangeTo}'`); // temp
     const { data } = await this.instance.spreadsheets.values.get({
       spreadsheetId: this.sheetId,
       range: `${sheet}!${rangeFrom}:${rangeTo}`
     });
 
+    console.log(`${data.values.length} rows found.`); // temp
     return data.values;
   }
 }

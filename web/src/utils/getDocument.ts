@@ -1,5 +1,7 @@
 import getClient from '../lib/googleapi';
 
+// NOTE: For server-side use only.
+
 async function getDocument(documentId: string) {
   const { docs } = await getClient();
   const { data } = await docs.documents.get({ documentId });

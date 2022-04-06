@@ -1,8 +1,8 @@
 import React, { FC, useState } from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { getSession, signOut } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import styled from 'styled-components';
-import db from '../lib/firestore';
+import FetchProps from '../server-props/profile';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
 import SEO from '../components/SEO';
 
@@ -86,38 +86,7 @@ const Profile: FC = (props: InferGetServerSidePropsType<typeof getServerSideProp
 }
 
 export default Profile;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
-
-  if (session) {
-    const { name } = session.user;
-    const accountsRef = db.collection('accounts');
-    const account = await accountsRef.doc(name).get();
-
-    if (account.exists) {
-      const { fullname, email, address, phone } = account.data();
-      return {
-        props: {
-          username: name,
-          fullname,
-          email,
-          address,
-          phone
-        }
-      };
-    }
-
-    return { notFound: true };
-  }
-
-  return { 
-    redirect: { 
-      destination: '/', 
-      permanent: false 
-    } 
-  };
-}
+export const getServerSideProps: GetServerSideProps = FetchProps;
 
 const Container = styled.div`
   width: 90%;

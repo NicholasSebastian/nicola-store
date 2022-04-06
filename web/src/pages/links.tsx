@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
 import styled from 'styled-components';
-import sanity from '../lib/sanity';
+import GenerateProps from '../server-props/links';
 import SEO from '../components/SEO';
 
 const Links: FC = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -24,13 +24,7 @@ const Links: FC = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 }
 
 export default Links;
-
-const query = "*[_id == 'socials'][0]";
-
-export const getStaticProps: GetStaticProps = async () => {
-  const links: ILinks = await sanity.fetch(query);
-  return { props: { links } };
-};
+export const getStaticProps: GetStaticProps = GenerateProps;
 
 const Container = styled.div`
   display: flex;

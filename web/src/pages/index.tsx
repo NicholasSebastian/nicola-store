@@ -2,7 +2,7 @@ import React, { FC, Fragment, useMemo, useState } from 'react';
 import { GetStaticProps } from 'next';
 import Link from 'next/link';
 import styled from 'styled-components';
-import sanity from '../lib/sanity';
+import GenerateProps from '../server-props/index';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
 import imageUrlFor from '../utils/imageUrlFor';
 import SEO from '../components/SEO';
@@ -28,12 +28,14 @@ function generateImageUrls(banners: Array<IBannerData>) {
 
 const Index: FC<IHomeContent> = (props) => {
   const [language] = useLanguage();
+
   const banners = useMemo(() => generateImageUrls(props.banners), [props.banners]);
   const grid = useMemo(() => generateImageUrls(props.grid), [props.grid]);
   const bannerMiddle = useMemo(() => imageUrlFor(props.bannerMiddle).height(BANNER_RES).url(), [props.bannerMiddle]);
   
   const [newsletter, setNewsletter] = useState('');
   const [subscribed, setSubscribed] = useState<boolean | 'invalid'>(false);
+
   const subscribeNewsletter = async () => {
     if ((/\S+@\S+\.\S+/).test(newsletter)) {
       await fetch(`/api/newsletter?email=${newsletter}`);
@@ -91,35 +93,7 @@ const Index: FC<IHomeContent> = (props) => {
 }
 
 export default Index;
-
-const query = (`
-  *[_id == 'homePage'] {
-    banners[] { ...image { ...asset { 'image': _ref } }, path, text },
-    grid[] { ...image { ...asset { 'image': _ref } }, path, text },
-    ...bannerMiddle { ...asset { 'bannerMiddle': _ref } }
-  }[0]
-`);
-
-const itemsQuery = (`
-  *[_type == 'product'] | order(_createdAt desc) {
-    name,
-    ...slug { 'slug': current },
-    price,
-    discount,
-    ...colors[0] { 
-      ...images[0] { ...asset { 'image1': _ref }},
-      ...images[1] { ...asset { 'image2': _ref }}
-    },
-    ...colors[1] { ...images[0] { ...asset { 'image3': _ref }} },
-    'createdAt': _createdAt,
-  }[0...4]
-`);
-
-export const getStaticProps: GetStaticProps = async () => {
-  const data: IHomeContent = await sanity.fetch(query);
-  const items = await sanity.fetch(itemsQuery);
-  return { props: { ...data, items } };
-};
+export const getStaticProps: GetStaticProps = GenerateProps;
 
 const Container = styled.div`
   h2 {

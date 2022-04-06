@@ -1,17 +1,23 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import Sheets from '../../lib/sheets';
-import useCache from '../../utils/useCache';
-import { IProduct, Variants } from '../product/[slug]';
+import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
+import sanity from '../lib/sanity';
+import Sheets from '../lib/sheets';
+import useCache from '../utils/useCache';
+import { IProduct, Variants } from '../pages/product/[slug]';
 
 const INVENTORY_ID = '1I-BCqr41Lzlf5XVJEgrDZF9yYHupBREOipbAHjdwwhk';
 const HEADERS = ['id', 'name', 's', 'm', 'l'];
 const CACHE_TIME = 30; // in Seconds.
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { id, name, variants, category }: IProduct = req.body;
+export default async (context: GetServerSidePropsContext): Promise<Result> => {
+  const { slug } = context.params;
+  const product: IProduct = await sanity.fetch(query, { slug });
+  
+  if (!product) return { notFound: true };
 
   // Value is cached because google-sheets quota only allows up to 60 requests per minute.
-  const results = await useCache(id, async () => {
+  // Values are cached for 30 seconds, which means this can only cause up to 2 requests per minute.
+  const inventory = await useCache(product.id, async () => {
+    const { name, variants, category } = product;
 
     const sheets = await Sheets.getInstance(INVENTORY_ID);
     await addUnregisteredCategory(sheets, category);
@@ -22,8 +28,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   }, CACHE_TIME);
 
-  res.status(200).json(results);
-};
+  return { 
+    props: { 
+      product: { 
+        ...product, 
+        variants: product.variants.map(variant => ({
+          ...variant,
+          ...(inventory.find(item => item.key === variant.key))
+        })) 
+      } 
+    } 
+  };
+}
 
 async function addUnregisteredCategory(client: Sheets, category: string) {
   const categoryExists = await client.hasSheet(category);
@@ -47,11 +63,37 @@ function getInventoryData(rows: any[][], variants: Variants) {
   return rows
     .filter(row => variants.some(variant => variant.key === row[0]))
     .map(item => ({ 
+      key: item[0],
       s: parseInt(item[2]), 
       m: parseInt(item[3]), 
       l: parseInt(item[4]) 
     }));
 }
+
+const query = (`
+  *[_type == 'product' && slug.current == $slug] {
+    'id': _id,
+    name,
+    'variants': colors[] {
+      'key': _key,
+      name,
+      images[] { ...asset { 'image': _ref } }
+    },
+    price,
+    discount,
+    shopee,
+    ...category-> { ...slug { 'category': current } },
+    collection-> {
+      name,
+      ...slug { 'slug': current }
+    },
+    description { en, id },
+    moreInfo { en, id },
+    'createdAt': _createdAt
+  }[0]
+`);
+
+type Result = GetServerSidePropsResult<{ [key: string]: any }>
 
 interface ISimpleProductData {
   productName: string

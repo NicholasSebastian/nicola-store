@@ -1,8 +1,8 @@
-import React, { FC, useState, useRef, useEffect, Fragment } from 'react';
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
+import React, { FC, useState, useEffect, Fragment } from 'react';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import styled from 'styled-components';
 import PortableText from 'react-portable-text';
-import sanity from '../../lib/sanity';
+import FetchProps from '../../server-props/product';
 import imageUrlFor from '../../utils/imageUrlFor';
 import useBag from '../../hooks/useBag';
 import useLanguage, { ILocalization, Language } from '../../hooks/useLanguage';
@@ -29,13 +29,12 @@ const localization: ILocalization = {
   }
 };
 
-const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Product: FC = ({ product }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [language] = useLanguage();
   const { addToBag } = useBag();
 
   // State
-  const [variant, variantIndex, setVariantIndex] = useVariant(product.variants);
-  const quantities = useInventory(product, variantIndex);
+  const [variantIndex, setVariantIndex] = useState(0);
   const [size, setSize] = useState<Size>();
   const [amount, setAmount] = useState<number>(1);
   const [message, setMessage] = useState<string>();
@@ -44,8 +43,10 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
   useEffect(() => setSize(undefined), [variantIndex]);
   useEffect(() => setAmount(1), [variantIndex, size]);
   useEffect(() => setMessage(undefined), [size, language]);
-
-  const soldOut = quantities && Object.values(quantities).every(qty => qty === 0);
+  
+  const variant = product.variants[variantIndex];
+  
+  const soldOut = (variant.s === 0) && (variant.m === 0) && (variant.l === 0);
   const imageUrls = variant.images.map(e => imageUrlFor(e.image).width(1000).url());
 
   const handleAddToBag: React.MouseEventHandler = () => {
@@ -74,10 +75,12 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
           <div>{variant.name}</div>
           <PriceLabel price={product.price} discount={product.discount} />
           <div>
-            {!quantities && <span style={{ fontSize: 13 }}>Checking inventory...</span>}
             {soldOut && <b>{localization.sold[language].toUpperCase()}</b>}
-            {quantities && size && (
-              <span><b>{localization.stock[language]}:</b> {`${quantities[size]} (Size: ${size.toUpperCase()})`}</span>
+            {size && (
+              <span>
+                <b>{localization.stock[language]}:</b> 
+                {`${variant[size]} (Size: ${size.toUpperCase()})`}
+              </span>
             )}
           </div>
           <div>
@@ -94,18 +97,18 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
             <div>{localization.size[language]}:<span>{message}</span></div>
             {(['s', 'm', 'l'] as Array<Size>).map((name, i) => (
               <Fragment key={i}>
-                <input type='radio' name='size' id={name} disabled={!quantities || quantities[name] === 0}
+                <input type='radio' name='size' id={name} disabled={variant[name] === 0}
                   checked={size === name} onChange={() => setSize(name)} />
                 <label htmlFor={name}>{name.toUpperCase()}</label>
               </Fragment>
             ))}
           </div>
           <div>
-            {quantities && size && (
+            {size && (
               <Fragment>
                 <button onClick={() => { if (amount > 1) setAmount(amount - 1) }}>-</button>
                 <div>{amount}</div>
-                <button onClick={() => { if (amount < quantities[size]) setAmount(amount + 1) }}>+</button>
+                <button onClick={() => { if (amount < variant[size]) setAmount(amount + 1) }}>+</button>
               </Fragment>
             )}
           </div>
@@ -129,71 +132,8 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
   );
 }
 
-const useVariant = (_variants: Variants): StateReturnType<IVariant> => {
-  const [index, setIndex] = useState(0);
-  const variants = useRef<Variants>(_variants).current;
-  const currentVariant = variants[index];
-  return [currentVariant, index, setIndex];
-}
-
-const useInventory = (product: IProduct, variantIndex: number): QuantityPerSize => {
-  const [inventory, setInventory] = useState<Quantities>();
-  useEffect(() => {
-    fetch('/api/inventory', { 
-      method: 'POST', 
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(product) 
-    })
-    .then(res => res.json())
-    .then(data => setInventory(data));
-  }, []);
-
-  return inventory ? inventory[variantIndex] : undefined;
-}
-
 export default Product;
-
-const query = "*[_type == 'product'] { ...slug { 'slug': current } }";
-
-const contentQuery = (`
-  *[_type == 'product' && slug.current == $slug] {
-    'id': _id,
-    name,
-    'variants': colors[] {
-      'key': _key,
-      name,
-      images[] { ...asset { 'image': _ref } }
-    },
-    price,
-    discount,
-    shopee,
-    ...category-> { ...slug { 'category': current } },
-    collection-> {
-      name,
-      ...slug { 'slug': current }
-    },
-    description { en, id },
-    moreInfo { en, id },
-    'createdAt': _createdAt
-  }[0]
-`);
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const results = await sanity.fetch(query);
-  const paths = results.map(({ slug }) => ({ params: { slug } }));
-
-  return { paths, fallback: false };
-}
-
-export const getStaticProps: GetStaticProps = async (context) => {
-  const { slug } = context.params;
-  const product: IProduct = await sanity.fetch(contentQuery, { slug });
-
-  return { props: { product } };
-}
+export const getServerSideProps: GetServerSideProps = FetchProps;
 
 const Container = styled.div`
   padding-bottom: 70px;
@@ -403,11 +343,5 @@ interface IVariant {
   name: string
 }
 
-type QuantityPerSize = {
-  [size in Size]: number
-}
-
 export type Variants = Array<IVariant>
 export type Size = 's' | 'm' | 'l';
-type Quantities = Array<QuantityPerSize>
-type StateReturnType<T> = [T, number, React.Dispatch<React.SetStateAction<number>>];
