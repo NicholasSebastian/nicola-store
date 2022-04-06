@@ -15,6 +15,8 @@
 
 - Sync Shopping Bag to database.
 
+know yourself.
+
 ## Smaller Stuff
 
 - Component content from Sanity: Header categories(, newest collection) and Footer pages.
@@ -32,9 +34,15 @@
 - In-Website chat.
 - Schema Markup for SEO.
 
-## Known Bugs
+## The Problem
 
-- Mobile: Navigation drawer has a black thing when a link is tapped.
-- iPad:   Weird CSS bug in GridLayout's overbar.
+The fact that there are too many different sources of data.
+There isn't one single source of control.
 
-know yourself.
+Currently:
+
+- Content is stored in Sanity CMS.
+- User Accounts and Shopping Bag data are stored in Firestore.
+- Product Inventory, Customer Orders and Newsletter registrants are stored in Google Sheets.
+
+This works, but can be quite a pain in the ass.
