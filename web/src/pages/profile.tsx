@@ -4,7 +4,6 @@ import { getSession, signOut } from 'next-auth/react';
 import styled from 'styled-components';
 import db from '../lib/firestore';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
-import { fgFromBg } from '../utils/lightOrDark';
 import SEO from '../components/SEO';
 
 const localization: ILocalization = {
@@ -129,7 +128,7 @@ const Container = styled.div`
 
   > nav:first-child > button.selected {
     background-color: ${props => props.theme.accent};
-    color: ${props => fgFromBg(props.theme.accent)};
+    color: ${props => props.theme.lightFont};
   }
 
   @media only screen and (max-width: 1024px) {
@@ -222,7 +221,7 @@ const Form = styled.section`
   > button {
     width: 100%;
     background: ${props => props.theme.accent};
-    color: ${props => fgFromBg(props.theme.accent)};
+    color: ${props => props.theme.lightFont};
     border: 1px solid ${props => props.theme.accent};
     padding: 10px 0;
     font-size: 14px;
@@ -232,7 +231,7 @@ const Form = styled.section`
     :hover {
       cursor: pointer;
       background-color: ${props => props.theme.bg};
-      color: ${props => fgFromBg(props.theme.bg)};
+      color: ${props => props.theme.darkFont};
     }
   }
 `;

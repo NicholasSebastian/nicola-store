@@ -1,10 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../../lib/firestore';
-import getClient from '../../../lib/googleapi';
+import Sheets from '../../../lib/sheets';
 import { ISignUpErrors } from '../../login';
-
-const NEWSLETTER_ID = '1FTW2kJMOV5tQKTrosJ_ut2xBcyuylcn7Lzdqe8eaagE';
-const NEWSLETTER_SHEET = 'Subscriptions';
+import { NEWSLETTER_ID, NEWSLETTER_SHEET } from '../newsletter';
 
 async function checkUsername(username: string) {
   const accountsRef = db.collection('accounts');
@@ -19,17 +17,8 @@ async function checkEmail(email: string) {
 }
 
 async function addNewsletterSubscription(name: string, email: string) {
-  const { sheets } = await getClient();
-  await sheets.spreadsheets.values.append({
-    spreadsheetId: NEWSLETTER_ID,
-    range: `${NEWSLETTER_SHEET}!A:A`,
-    valueInputOption: "RAW",
-    requestBody: {
-      values: [
-        [email, name]
-      ]
-    }
-  });
+  const sheets = await Sheets.getInstance(NEWSLETTER_ID);
+  await sheets.addRow(NEWSLETTER_SHEET, [email, name]);
 }
 
 async function createAccount(account: any) {

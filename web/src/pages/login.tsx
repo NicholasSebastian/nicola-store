@@ -4,7 +4,6 @@ import ReCaptcha from 'react-google-recaptcha';
 import { signIn } from 'next-auth/react';
 import styled from 'styled-components';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
-import { fgFromBg } from '../utils/lightOrDark';
 import SEO from '../components/SEO';
 import FormInput from '../components/FormInput';
 import Loading from '../components/Loading';

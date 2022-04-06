@@ -1,6 +1,5 @@
 import React, { FC, useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { fgFromBg } from '../utils/lightOrDark';
 
 const BREAKPOINT = 1024;
 const SWIPE_DISTANCE = 50;
@@ -121,7 +120,7 @@ const Container = styled.div<IStyleArguments>`
       top: 8px;
       right: 8px;
       background-color: ${props => props.theme.shadow};
-      color: ${props => fgFromBg(props.theme.shadow)};
+      color: ${props => props.theme.darkFont};
       font-size: 13px;
       padding: 2px 10px;
       border-radius: 30px;

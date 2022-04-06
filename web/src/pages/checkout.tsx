@@ -1,15 +1,62 @@
 import React, { FC, Fragment, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import useBag, { BagConsumer, IItemData } from '../hooks/useBag';
-import { fgFromBg } from '../utils/lightOrDark';
+import { BagConsumer, IItemData } from '../hooks/useBag';
 import formatCurrency from '../utils/formatCurrency';
 import imageUrlFor from '../utils/imageUrlFor';
+import SEO from '../components/SEO';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
+import PriceLabel from '../components/PriceLabel';
 
 const BREAKPOINT = 900;
 
-// TODO: Display and calculate with regards to discounts.
+const Checkout: FC = () => {
+  const { discount, promoCode, setPromoCode } = usePromo();
+  return (
+    <Container>
+      <SEO pageTitle='Checkout' />
+      <div>
+        <h1>Order Summary</h1>
+      </div>
+      <BagConsumer>
+        {bag => {
+          // Calculate the subtotal from the item prices, discounts and amounts.
+          const subtotal = bag.reduce((sum, val) => {
+            const withDiscount = (val.price / 100) * (100 - val.discount);
+            const withAmount = withDiscount * val.amount;
+            return sum + withAmount;
+          }, 0);
+          
+          // To be added with shipping cost, etc. in the future.
+          const total = subtotal - (typeof discount === 'number' ? discount : 0);
+
+          return (
+            <Fragment>
+              <div>
+                {/* TODO: Make this like a carousel to show multiple pages? */}
+                {(bag.length > 0) ? 
+                  bag.map((item, i) => <OrderItem key={i} {...item} />) : 
+                  <span>Your cart is empty.</span>
+                }
+              </div>
+              <div>
+                <div>
+                  <SummaryItem label='Subtotal' value={subtotal} />
+                  <SummaryItem label='Shipping' value='FREE' />
+                  {discount && <SummaryItem label='Promo Code Discount' value={discount} />}
+                  <SummaryItem label='Total' value={total} />
+                  <FormInput label='Promo Code' placeholder='Promo Code (Optional)'
+                    value={promoCode} onChange={setPromoCode} />
+                  <Button primary disabled={bag.length === 0}>Checkout</Button>
+                </div>
+              </div>
+            </Fragment>
+          );
+        }}
+      </BagConsumer>
+    </Container>
+  );
+}
 
 const OrderItem: FC<IItemData> = props => {
   const { name, variant, image, price, discount, amount, size } = props;
@@ -19,7 +66,7 @@ const OrderItem: FC<IItemData> = props => {
       <div>
         <div>{name}</div>
         <div>{variant} ({size.toUpperCase()})</div>
-        <div>{formatCurrency(price)}</div>
+        <PriceLabel price={price} discount={discount} size={13} />
         <div>x{amount}</div>
       </div>
     </OrderItemContainer>
@@ -60,45 +107,6 @@ const usePromo = () => {
   return { discount, promoCode, setPromoCode };
 }
 
-const Checkout: FC = () => {
-  const { discount, promoCode, setPromoCode } = usePromo();
-  return (
-    <Container>
-      <div>
-        <h1>Order Summary</h1>
-      </div>
-      <BagConsumer>
-        {bag => {
-          const subtotal = bag.reduce((acc, val) => acc + (val.price * val.amount), 0);
-          const total = subtotal; // To be added with shipping cost, etc. in the future.
-          return (
-            <Fragment>
-              <div>
-                {/* TODO: Make this like a carousel to show multiple pages? */}
-                {(bag.length > 0) ? 
-                  bag.map((item, i) => <OrderItem key={i} {...item} />) : 
-                  <span>Your cart is empty.</span>
-                }
-              </div>
-              <div>
-                <div>
-                  <SummaryItem label='Subtotal' value={subtotal} />
-                  <SummaryItem label='Shipping' value='FREE' />
-                  {discount && <SummaryItem label='Promo Code Discount' value={discount} />}
-                  <SummaryItem label='Total' value={total} />
-                  <FormInput label='Promo Code' placeholder='Promo Code (Optional)'
-                    value={promoCode} onChange={setPromoCode} />
-                  <Button primary disabled={bag.length === 0}>Checkout</Button>
-                </div>
-              </div>
-            </Fragment>
-          );
-        }}
-      </BagConsumer>
-    </Container>
-  );
-}
-
 export default Checkout;
 
 const Container = styled.div`
@@ -119,7 +127,7 @@ const Container = styled.div`
     padding: 20px;
 
     > div {
-      color: ${props => fgFromBg(props.theme.bg)};
+      color: ${props => props.theme.darkFont};
       font-size: 14px;
       margin-bottom: 5px;
 
@@ -161,6 +169,7 @@ const OrderItemContainer = styled.div`
   padding: 10px 0;
   border: 1px solid transparent;
   transition: all 100ms linear;
+  user-select: none;
 
   :hover {
     border-top: 1px solid ${props => props.theme.shadow};

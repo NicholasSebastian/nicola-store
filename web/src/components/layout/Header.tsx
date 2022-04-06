@@ -5,8 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSession, signIn } from "next-auth/react";
 import styled, { useTheme } from "styled-components";
-
-import { fgFromBg } from "../../utils/lightOrDark";
 import useBag from "../../hooks/useBag";
 import useCurrency from "../../hooks/useCurrency";
 import useLanguage, { Language } from "../../hooks/useLanguage";
@@ -31,7 +29,6 @@ const Header: FC<IHeaderProps> = ({ message }) => {
   const theme: any = useTheme();
   const { status, data } = useSession();
   const router = useRouter();
-  const foregroundColor = fgFromBg(theme.bg);
   
   const { bag, openBag } = useBag();
   const [currency, setCurrency] = useCurrency();
@@ -85,7 +82,7 @@ const Header: FC<IHeaderProps> = ({ message }) => {
         <input type='checkbox' id="nav-drawer-toggle" 
           checked={drawerOpen} onChange={() => setDrawerOpen(!drawerOpen)} />
         <label htmlFor="nav-drawer-toggle">
-          <GiHamburgerMenu size={30} color={foregroundColor} />
+          <GiHamburgerMenu size={30} color={theme.darkFont} />
         </label>
         <div>
           {navigationPaths.map((path, i) => (
@@ -94,7 +91,7 @@ const Header: FC<IHeaderProps> = ({ message }) => {
           {extra}
           {rightExtras}
         </div>
-        <GiShoppingBag onClick={openBag} size={30} color={foregroundColor} />
+        <GiShoppingBag onClick={openBag} size={30} color={theme.darkFont} />
         <div>{leftExtras}</div>
         <div>{rightExtras}</div>
       </div>
@@ -107,9 +104,6 @@ export default Header;
 const breakpoint = 900;
 
 const Container = styled.nav<IStyleArguments>`
-  --foregroundColor: ${props => fgFromBg(props.theme.bg)};
-  --accentTextColor: ${props => fgFromBg(props.theme.accent)};
-
   position: sticky;
   top: 0;
   z-index: 1;
@@ -118,7 +112,7 @@ const Container = styled.nav<IStyleArguments>`
   > div:first-child {
     padding: 5px 0;
     background-color: ${props => props.theme.accent};
-    color: var(--accentTextColor);
+    color: ${props => props.theme.lightFont};
     font-size: 10px;
     text-transform: uppercase;
     text-align: center;
@@ -150,7 +144,7 @@ const Container = styled.nav<IStyleArguments>`
     > div:first-of-type > a, 
     > div:first-of-type > button {
       background: none;
-      color: var(--foregroundColor);
+      color: ${props => props.theme.darkFont};
       font-size: 14px;
       font-family: 'Oswald', sans-serif;
       text-transform: uppercase;
@@ -195,7 +189,7 @@ const Container = styled.nav<IStyleArguments>`
 
       > button, a {
         background: none;
-        color: var(--foregroundColor);
+        color: ${props => props.theme.darkFont};
         border: none;
         font-size: 13px;
         text-decoration: none;
@@ -219,7 +213,7 @@ const Container = styled.nav<IStyleArguments>`
       > a, 
       > button {
         background: none;
-        color: var(--foregroundColor);
+        color: ${props => props.theme.darkFont};
         border: none;
         font-size: 13px;
         text-decoration: none;
@@ -239,7 +233,7 @@ const Container = styled.nav<IStyleArguments>`
         > div {
           display: none;
           background-color: ${props => props.theme.accent};
-          color: var(--accentTextColor);
+          color: ${props => props.theme.lightFont};
           font-size: 12px;
           padding: 12px 10px 6px 10px;
           white-space: nowrap;

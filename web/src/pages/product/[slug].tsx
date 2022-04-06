@@ -4,13 +4,12 @@ import styled from 'styled-components';
 import PortableText from 'react-portable-text';
 import sanity from '../../lib/sanity';
 import imageUrlFor from '../../utils/imageUrlFor';
-import formatCurrency from '../../utils/formatCurrency';
-import { fgFromBg } from '../../utils/lightOrDark';
 import useBag from '../../hooks/useBag';
 import useLanguage, { ILocalization, Language } from '../../hooks/useLanguage';
 import SEO from '../../components/SEO';
 import Gallery from '../../components/Gallery';
 import Button from '../../components/Button';
+import PriceLabel from '../../components/PriceLabel';
 
 const localization: ILocalization = {
   'sold': { en: 'Sold Out', id: 'Stok Habis' },
@@ -30,31 +29,6 @@ const localization: ILocalization = {
   }
 };
 
-const useVariant = (_variants: Variants): StateReturnType<IVariant> => {
-  const [index, setIndex] = useState(0);
-  const variants = useRef<Variants>(_variants).current;
-  const currentVariant = variants[index];
-  return [currentVariant, index, setIndex];
-}
-
-const useInventory = (product: IProduct, variantIndex: number): QuantityPerSize => {
-  const [inventory, setInventory] = useState<Quantities>();
-  useEffect(() => {
-    fetch('/api/inventory', { 
-      method: 'POST', 
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(product) 
-    })
-    .then(res => res.json())
-    .then(data => setInventory(data));
-  }, []);
-
-  return inventory ? inventory[variantIndex] : undefined;
-}
-
 const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [language] = useLanguage();
   const { addToBag } = useBag();
@@ -72,6 +46,7 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
   useEffect(() => setMessage(undefined), [size, language]);
 
   const soldOut = quantities && Object.values(quantities).every(qty => qty === 0);
+  const imageUrls = variant.images.map(e => imageUrlFor(e.image).width(1000).url());
 
   const handleAddToBag: React.MouseEventHandler = () => {
     if (!size) {
@@ -91,17 +66,13 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
 
   return (
     <Container>
-      <SEO pageTitle={product.name} />
+      <SEO pageTitle={product.name} imageUrl={imageUrls[0]} />
       <section>
-        <Gallery imageUrls={variant.images.map(e => imageUrlFor(e.image).width(1000).url())} />
+        <Gallery imageUrls={imageUrls} />
         <div>
           <h3>{product.name}</h3>
           <div>{variant.name}</div>
-          <div>
-            <span>{(product.discount > 0) ? <s>{formatCurrency(product.price)}</s> : formatCurrency(product.price)}</span>
-            {(product.discount > 0) && <span>{formatCurrency((product.price / 100) * (100 - product.discount))}</span>}
-            {(product.discount > 0) && <span>{product.discount + '%'}</span>}
-          </div>
+          <PriceLabel price={product.price} discount={product.discount} />
           <div>
             {!quantities && <span style={{ fontSize: 13 }}>Checking inventory...</span>}
             {soldOut && <b>{localization.sold[language].toUpperCase()}</b>}
@@ -158,6 +129,31 @@ const Product: FC = ({ product }: InferGetStaticPropsType<typeof getStaticProps>
   );
 }
 
+const useVariant = (_variants: Variants): StateReturnType<IVariant> => {
+  const [index, setIndex] = useState(0);
+  const variants = useRef<Variants>(_variants).current;
+  const currentVariant = variants[index];
+  return [currentVariant, index, setIndex];
+}
+
+const useInventory = (product: IProduct, variantIndex: number): QuantityPerSize => {
+  const [inventory, setInventory] = useState<Quantities>();
+  useEffect(() => {
+    fetch('/api/inventory', { 
+      method: 'POST', 
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(product) 
+    })
+    .then(res => res.json())
+    .then(data => setInventory(data));
+  }, []);
+
+  return inventory ? inventory[variantIndex] : undefined;
+}
+
 export default Product;
 
 const query = "*[_type == 'product'] { ...slug { 'slug': current } }";
@@ -200,7 +196,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
 }
 
 const Container = styled.div`
-  --foregroundColor: ${props => fgFromBg(props.theme.bg)};
   padding-bottom: 70px;
 
   > section:first-of-type > div:nth-of-type(2) {
@@ -208,7 +203,7 @@ const Container = styled.div`
     
     // Product name
     > h3 {
-      color: var(--foregroundColor);
+      color: ${props => props.theme.darkFont};
       font-size: 20px;
       margin: 0;
     }
@@ -222,22 +217,6 @@ const Container = styled.div`
     // Price
     > div:nth-child(3) {
       margin-top: 10px;
-
-      > span:nth-child(1) > s {
-        color: #f44;
-        font-size: 14px;
-      }
-
-      > span:nth-child(2) {
-        margin-left: 6px;
-      }
-
-      > span:nth-child(3) {
-        background-color: rgba(255, 0, 0, 0.3);
-        padding: 0 5px;
-        margin-left: 10px;
-        font-size: 14px;
-      }
     }
 
     // Inventory amount
@@ -271,7 +250,7 @@ const Container = styled.div`
         display: none;
 
         + label {
-          color: var(--foregroundColor);
+          color: ${props => props.theme.darkFont};
           font-size: 13px;
           user-select: none;
           padding: 8px 16px;
@@ -290,7 +269,7 @@ const Container = styled.div`
 
         :checked + label {
           background-color: ${props => props.theme.accent};
-          color: ${props => fgFromBg(props.theme.accent)};
+          color: ${props => props.theme.lightFont};
         }
       }
     }

@@ -4,7 +4,6 @@ import Link from "next/link";
 import styled, { useTheme } from "styled-components";
 import { FaInstagramSquare, FaLine, FaWhatsappSquare } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
-import { fgFromBg } from '../../utils/lightOrDark';
 
 const copyright = "lanica";
 const email = "lanicathelabel@gmail.com";
@@ -20,7 +19,6 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsapp}`;
 const Footer: FC = () => {
   const theme: any = useTheme();
   const { pathname } = useRouter();
-  const foregroundColor = fgFromBg(theme.accent);
   const currentYear = useRef(new Date().getFullYear()).current;
   return (
     <Container exception={pathname === '/checkout'}>
@@ -32,10 +30,10 @@ const Footer: FC = () => {
       </div>
       <div>
         <h4>Contact Us</h4>
-        <a href={emailUrl}><SiGmail size={30} color={foregroundColor} /></a>
-        <a href={instagramUrl}><FaInstagramSquare size={30} color={foregroundColor} /></a>
-        <a href={lineUrl}><FaLine size={30} color={foregroundColor} /></a>
-        <a href={whatsappUrl}><FaWhatsappSquare size={30} color={foregroundColor} /></a>
+        <a href={emailUrl}><SiGmail size={30} color={theme.lightFont} /></a>
+        <a href={instagramUrl}><FaInstagramSquare size={30} color={theme.lightFont} /></a>
+        <a href={lineUrl}><FaLine size={30} color={theme.lightFont} /></a>
+        <a href={whatsappUrl}><FaWhatsappSquare size={30} color={theme.lightFont} /></a>
       </div>
       <span>{`Copyright © ${currentYear} ${copyright}`}</span>
     </Container>
@@ -45,10 +43,8 @@ const Footer: FC = () => {
 export default Footer;
 
 const Container = styled.footer<IStyleArguments>`
-  --foregroundColor: ${props => fgFromBg(props.theme.accent)};
-
   background-color: ${props => props.theme.accent};
-  color: var(--foregroundColor);
+  color: ${props => props.theme.lightFont};
   padding-top: 40px;
   padding-bottom: 50px;
   padding-left: 24px;
@@ -60,7 +56,7 @@ const Container = styled.footer<IStyleArguments>`
     margin-bottom: 20px;
 
     > a {
-      color: var(--foregroundColor);
+      color: ${props => props.theme.lightFont};
       font-size: 13px;
       text-decoration: none;
       margin-bottom: 10px;
@@ -71,7 +67,7 @@ const Container = styled.footer<IStyleArguments>`
     margin-bottom: 15px;
 
     > h4 {
-      color: var(--foregroundColor);
+      color: ${props => props.theme.lightFont};
       margin-top: 0;
       margin-bottom: 10px;
     }
@@ -82,7 +78,7 @@ const Container = styled.footer<IStyleArguments>`
   }
 
   > span {
-    color: var(--foregroundColor);
+    color: ${props => props.theme.lightFont};
     font-size: 10px;
   }
 

@@ -13,17 +13,16 @@
 
 - Use bcrypt to encrypt passwords.
 
+- Sync Shopping Bag to database.
+
 ## Smaller Stuff
 
 - Component content from Sanity: Header categories(, newest collection) and Footer pages.
 - Language toggle for header and footer elements.
 - Footer social links.
 
-- Sync Shopping Bag to database.
-
 ## Even Smaller, Less Important Stuff
 
-- Remove the use of the 'fgFromBg' function.
 - Product Page recommendations.
 - Like the categories page, but for collections.
 - Shipping prices from Sanity.

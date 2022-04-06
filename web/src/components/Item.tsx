@@ -3,7 +3,6 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import imageUrlFor from '../utils/imageUrlFor';
 import formatCurrency from '../utils/formatCurrency';
-import { fgFromBg } from '../utils/lightOrDark';
 
 const IMAGE_RES = 600;
 
@@ -55,7 +54,7 @@ const Container = styled.div`
   }
 
   > h4, > span {
-    color: ${props => fgFromBg(props.theme.bg)};
+    color: ${props => props.theme.darkFont};
   }
 
   @media only screen and (min-width: 600px) {

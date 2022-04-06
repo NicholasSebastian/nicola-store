@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import { fgFromBg } from '../utils/lightOrDark';
 
 const FormOption: FC<IFormOptionProps> = props => {
   const { id, label, options, value, onChange } = props;
@@ -52,7 +51,7 @@ const Container = styled.div`
 
     > label.selected {
       background-color: ${props => props.theme.accent};
-      color: ${props => fgFromBg(props.theme.accent)};
+      color: ${props => props.theme.lightFont};
     }
   }
 `;

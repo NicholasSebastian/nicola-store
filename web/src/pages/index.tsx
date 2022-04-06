@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import sanity from '../lib/sanity';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
 import imageUrlFor from '../utils/imageUrlFor';
-import { fgFromBg } from '../utils/lightOrDark';
 import SEO from '../components/SEO';
 import Button from '../components/Button';
 import Carousel, { IBannerData } from '../components/Carousel';
@@ -123,10 +122,8 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 const Container = styled.div`
-  --foregroundColor: ${props => fgFromBg(props.theme.bg)};
-
   h2 {
-    color: var(--foregroundColor);
+    color: ${props => props.theme.darkFont};
     font-size: 23px;
     margin-top: 0;
 

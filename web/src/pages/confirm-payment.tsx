@@ -3,6 +3,7 @@ import ReCaptcha from 'react-google-recaptcha';
 import { BiCalendarMinus, BiCalendarPlus } from 'react-icons/bi';
 import styled from 'styled-components';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
+import SEO from '../components/SEO';
 import FormInput from '../components/FormInput';
 import FormOption from '../components/FormOption';
 import Button from '../components/Button';
@@ -35,6 +36,7 @@ const ConfirmPayment: FC = () => {
 
   return (
     <Container>
+      <SEO pageTitle='Confirm Payment' />
       <h1>{localization.confirmation[language]}</h1>
       <div>
         <div>

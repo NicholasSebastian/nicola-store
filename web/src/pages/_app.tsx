@@ -10,13 +10,10 @@ const theme = {
   bg: '#f9f2ee',
   accent: '#97645a',
   shadow: '#ffd4c2',
-  highlight: '#fffbf8'
+  highlight: '#fffbf8',
+  lightFont: '#f9f2ee',
+  darkFont: '#6b4942'
 };
-
-const fontColors = {
-  light: '#f9f2ee',
-  dark: '#6b4942'
-}
 
 export default ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
@@ -38,8 +35,6 @@ export default ({ Component, pageProps: { session, ...pageProps } }) => {
     </Fragment>
   );
 };
-
-export { fontColors };
 
 const GlobalStyles = createGlobalStyle`
   * {
@@ -65,6 +60,6 @@ const GlobalStyles = createGlobalStyle`
   }
 
   div, span, p {
-    color: ${fontColors.dark};
+    color: ${theme.darkFont};
   }
 `;

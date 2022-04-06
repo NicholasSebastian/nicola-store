@@ -10,8 +10,13 @@ const DRAWER_SPEED = 250; // in milliseconds.
 const BagContext = createContext<IBagContext>(undefined);
 const useBag = () => useContext(BagContext);
 
+function loadBagData() {
+  // TODO: Fetch data if logged in.
+  return [];
+}
+
 const BagProvider: FC = ({ children }) => {
-  const [bag, setBag] = useState<Bag>([]);
+  const [bag, setBag] = useState<Bag>(loadBagData());
   const containerRef = useRef<HTMLDivElement>();
   const drawerRef = useRef<HTMLDivElement>();
   

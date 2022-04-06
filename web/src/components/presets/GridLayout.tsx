@@ -1,7 +1,6 @@
 import React, { FC, useState } from 'react';
 import styled from 'styled-components';
-import useLanguage, { ILocalization, Language } from '../../hooks/useLanguage';
-import { fgFromBg } from '../../utils/lightOrDark';
+import useLanguage, { ILocalization } from '../../hooks/useLanguage';
 import Item from '../../components/Item';
 
 // TODO: Pagination.
@@ -68,8 +67,6 @@ const GridLayout: FC<IGridLayoutProps> = ({ title, items }) => {
 export default GridLayout;
 
 const Container = styled.div`
-  --foregroundColor: ${props => fgFromBg(props.theme.bg)};
-
   width: 90%;
   max-width: 600px;
   margin: 0px auto;
@@ -78,7 +75,7 @@ const Container = styled.div`
 
   > nav:first-child {
     > h2 {
-      color: var(--foregroundColor);
+      color: ${props => props.theme.darkFont};
       font-size: 30px;
       margin-bottom: 20px;
     }
@@ -99,7 +96,7 @@ const Container = styled.div`
         position: absolute;
 
         + label {
-          color: var(--foregroundColor);
+          color: ${props => props.theme.darkFont};
           user-select: none;
           font-size: 12px;
           padding: 8px 16px;
@@ -115,7 +112,7 @@ const Container = styled.div`
 
         :checked + label {
           background-color: ${props => props.theme.accent};
-          color: ${props => fgFromBg(props.theme.accent)};
+          color: ${props => props.theme.lightFont};
         }
       }
     }

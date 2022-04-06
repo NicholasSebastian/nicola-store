@@ -1,6 +1,5 @@
 import React, { FC, HTMLAttributes } from 'react';
 import styled, { css } from "styled-components";
-import { fgFromBg } from '../utils/lightOrDark';
 
 const Button: FC<IButtonProps> = ({ primary, ...props }) => {
   return primary ? <PrimaryButton {...props} /> : <DefaultButton {...props} />
@@ -22,12 +21,12 @@ const sharedStyles = css`
 const DefaultButton = styled.button`
   ${sharedStyles}
   background-color: transparent;
-  color: var(--foregroundColor);
+  color: ${props => props.theme.darkFont};
   border: 1px solid ${props => props.theme.accent};
 
   :hover:not([disabled]) {
     background-color: ${props => props.theme.accent};
-    color: ${props => fgFromBg(props.theme.accent)};
+    color: ${props => props.theme.lightFont};
   }
 
   :disabled {
@@ -38,18 +37,18 @@ const DefaultButton = styled.button`
 const PrimaryButton = styled.button`
   ${sharedStyles}
   background-color: ${props => props.theme.accent};
-  color: ${props => fgFromBg(props.theme.accent)};
+  color: ${props => props.theme.lightFont};
   border: 1px solid transparent;
 
   :hover:not([disabled]) {
     background-color: ${props => props.theme.bg};
-    color: ${props => fgFromBg(props.theme.bg)};
+    color: ${props => props.theme.darkFont};
     border-color: ${props => props.theme.accent};
   }
 
   :disabled {
     background-color: transparent;
-    color: ${props => fgFromBg(props.theme.bg)};
+    color: ${props => props.theme.darkFont};
     border-color: ${props => props.theme.accent};
   }
 `;

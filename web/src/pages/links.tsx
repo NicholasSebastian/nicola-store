@@ -3,12 +3,13 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
 import styled from 'styled-components';
 import sanity from '../lib/sanity';
-import { fgFromBg } from '../utils/lightOrDark';
+import SEO from '../components/SEO';
 
 const Links: FC = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const links = props.links as ILinks;
   return (
     <Container>
+      <SEO pageTitle='Links' />
       <Link href='/'><button>Website</button></Link>
       {links.email && <a href={`mailto:${links.email}`}><button>Email</button></a>}
       {links.instagram && <a href={links.instagram}><button>Instagram</button></a>}
@@ -43,7 +44,7 @@ const Container = styled.div`
 
   button {
     background-color: ${props => props.theme.accent};
-    color: ${props => fgFromBg(props.theme.accent)};
+    color: ${props => props.theme.lightFont};
     border: 1px solid transparent;
     width: 180px;
     padding: 16px 0;
@@ -52,7 +53,7 @@ const Container = styled.div`
     :hover {
       cursor: pointer;
       background-color: ${props => props.theme.bg};
-      color: ${props => fgFromBg(props.theme.bg)};
+      color: ${props => props.theme.darkFont};
       border-color: ${props => props.theme.accent};
     }
   }
