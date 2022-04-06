@@ -46,7 +46,7 @@ const Login: FC<IPageProps> = ({ changePage }) => {
 
   return (
     <Container>
-      <SEO pageTitle='Log In' />
+      <SEO pageTitle='Log In' noFollow />
       <h1>{localization.login[language]}</h1>
       <LoginErrorMessage />
       <FormInput label={localization.username[language]} placeholder='Username' 
@@ -138,7 +138,7 @@ const SignUp: FC<IPageProps> = ({ changePage }) => {
 
   return loading ? <Loading /> : (
     <Container>
-      <SEO pageTitle='Sign Up' />
+      <SEO pageTitle='Sign Up' noFollow />
       {success ? 
         <h4>{localization.success[language]}</h4> : (
         <Fragment>

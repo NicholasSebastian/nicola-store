@@ -14,7 +14,7 @@ const DESCRIPTION = "The official online store of lanica the label. \
   Designed and manufactured in house for quality and style. \
   Dresses, tops, knits, jackets, denim, accessories and more!";
 
-const SEO: FC<ISeoProps> = ({ pageTitle, url, imageUrl }) => {
+const SEO: FC<ISeoProps> = ({ pageTitle, url, imageUrl, noFollow }) => {
   const title = pageTitle ? `${pageTitle} - ${TITLE}` : TITLE;
   return (
     <Head>
@@ -22,7 +22,7 @@ const SEO: FC<ISeoProps> = ({ pageTitle, url, imageUrl }) => {
       <meta name="description" content={DESCRIPTION} />
   
       {/* SEO begins here */}
-      <meta name="robots" content="index, follow" />
+      <meta name="robots" content={noFollow ? "noindex, nofollow" : "index, follow"} />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta charSet="utf-8" />
       <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
@@ -43,4 +43,5 @@ interface ISeoProps {
   pageTitle?: string
   url?: string
   imageUrl?: string
+  noFollow?: boolean
 }

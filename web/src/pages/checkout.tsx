@@ -14,7 +14,7 @@ const Checkout: FC = () => {
   const { discount, promoCode, setPromoCode } = usePromo();
   return (
     <Container>
-      <SEO pageTitle='Checkout' />
+      <SEO pageTitle='Checkout' noFollow />
       <div>
         <h1>Order Summary</h1>
       </div>

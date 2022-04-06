@@ -68,7 +68,7 @@ const Profile: FC = (props: InferGetServerSidePropsType<typeof getServerSideProp
 
   return (
     <Container>
-      <SEO pageTitle='Profile' />
+      <SEO pageTitle='Profile' noFollow />
       <nav>
         <button onClick={() => setCurrentPage('profile')} 
           className={currentPage === 'profile' && 'selected'}>
