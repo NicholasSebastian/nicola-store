@@ -1,15 +1,15 @@
-import { MdCategory } from 'react-icons/md';
+import { HiCollection } from 'react-icons/hi';
 
 export default {
-  name: 'category',
-  title: 'Categories',
+  name: 'collection',
+  title: 'Collections',
   type: 'document',
-  icon: MdCategory,
+  icon: HiCollection,
   fields: [
     {
       name: 'name',
       title: 'Name',
-      type: 'localeString',
+      type: 'string',
       validation: Rule => Rule.required()
     },
     {
@@ -22,11 +22,5 @@ export default {
       },
       validation: Rule => Rule.required()
     }
-  ],
-
-  preview: {
-    select: {
-      title: 'name.en'
-    }
-  }
-}
+  ]
+};

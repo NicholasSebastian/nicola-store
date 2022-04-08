@@ -2,7 +2,7 @@ import { GiTShirt } from 'react-icons/gi';
 
 export default {
   name: 'product',
-  title: 'Product',
+  title: 'Products',
   type: 'document',
   icon: GiTShirt,
   fields: [
@@ -37,12 +37,28 @@ export default {
       validation: Rule => Rule.required().positive().max(100)
     },
     {
+      name: 'shopee',
+      title: 'Shopee Link',
+      type: 'string'
+    },
+    {
+      name: 'tokopedia',
+      title: 'Tokopedia Link',
+      type: 'string'
+    },
+    {
       name: 'category',
       title: 'Category',
       type: 'reference',
       to: { type: 'category' },
       validation: Rule => Rule.required(),
       options: { disableNew: true }
+    },
+    {
+      name: 'collection',
+      title: 'Collection',
+      type: 'reference',
+      to: { type: 'collection' }
     },
     {
       name: 'colors',
@@ -52,9 +68,10 @@ export default {
         {
           title: 'Variant',
           type: 'variant'
-        },
+        }
       ],
-      validation: Rule => Rule.required().min(1)
+      validation: Rule => Rule.required().min(1),
+      options: { layout: 'grid' }
     },
     {
       name: 'description',
@@ -75,7 +92,7 @@ export default {
   preview: {
     select: {
       title: 'name',
-      subtitle: 'category.name',
+      subtitle: 'category.name.en',
       media: 'colors.0.images.0.asset'
     }
   }

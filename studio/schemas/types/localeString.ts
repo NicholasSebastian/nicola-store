@@ -4,12 +4,13 @@ const languages = [
 ];
 
 export default {
-  name: 'localeBlockContent',
-  title: 'Locale Block Content',
+  name: 'localeString',
+  title: 'Locale String',
   type: 'object',
-  fields: languages.map(lang => ({
+  fields: languages.map((lang, i) => ({
     title: lang.title,
     name: lang.id,
-    type: 'blockContent'
+    type: 'string',
+    validation: Rule => (i === 0) ? Rule.required() : Rule
   }))
 }
