@@ -6,6 +6,7 @@ import FetchProps from '../../server-props/product';
 import imageUrlFor from '../../utils/imageUrlFor';
 import useBag from '../../hooks/useBag';
 import useLanguage, { ILocalization, Language } from '../../hooks/useLanguage';
+import withLayout, { withLayoutProps } from '../../components/layout/Layout';
 import SEO from '../../components/SEO';
 import Gallery from '../../components/Gallery';
 import Button from '../../components/Button';
@@ -132,8 +133,8 @@ const Product: FC = ({ product }: InferGetServerSidePropsType<typeof getServerSi
   );
 }
 
-export default Product;
-export const getServerSideProps: GetServerSideProps = FetchProps;
+export default withLayout(Product);
+export const getServerSideProps: GetServerSideProps = withLayoutProps(FetchProps);
 
 const Container = styled.div`
   padding-bottom: 70px;

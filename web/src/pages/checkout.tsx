@@ -1,8 +1,10 @@
 import React, { FC, Fragment, useEffect, useRef, useState } from 'react';
+import { GetStaticProps } from 'next';
 import styled from 'styled-components';
 import { BagConsumer, IItemData } from '../hooks/useBag';
 import formatCurrency from '../utils/formatCurrency';
 import imageUrlFor from '../utils/imageUrlFor';
+import withLayout, { generateLayoutProps } from '../components/layout/Layout';
 import SEO from '../components/SEO';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
@@ -107,7 +109,8 @@ const usePromo = () => {
   return { discount, promoCode, setPromoCode };
 }
 
-export default Checkout;
+export default withLayout(Checkout);
+export const getStaticProps: GetStaticProps = generateLayoutProps;
 
 const Container = styled.div`
   width: 90%;

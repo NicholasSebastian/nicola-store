@@ -49,7 +49,7 @@ async function fetchInventory(product: IProduct) {
   const rows = await sheets.getRows(category, 'A', 'E');
   
   // In the case that the product's variant does not exist yet, create it.
-  const unregisteredVariants = variants.filter(variant => !(rows?.some(row => (row[0] === variant.key))));
+  const unregisteredVariants = variants.filter(variant => !(rows?.some(row => row[0] === variant.key)));
   if (unregisteredVariants.length > 0) {
     const newValues = unregisteredVariants.map(variant => [variant.key, `${name} (${variant.name})`, 0, 0, 0]);
     await sheets.addRows(category, newValues);

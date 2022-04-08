@@ -3,6 +3,7 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
 import styled from 'styled-components';
 import GenerateProps from '../server-props/links';
+import withLayout, { withLayoutProps } from '../components/layout/Layout';
 import SEO from '../components/SEO';
 
 const Links: FC = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -23,8 +24,8 @@ const Links: FC = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   );
 }
 
-export default Links;
-export const getStaticProps: GetStaticProps = GenerateProps;
+export default withLayout(Links);
+export const getStaticProps: GetStaticProps = withLayoutProps(GenerateProps);
 
 const Container = styled.div`
   display: flex;

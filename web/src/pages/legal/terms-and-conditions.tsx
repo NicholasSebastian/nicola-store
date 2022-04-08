@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import GenerateProps from '../../server-props/legal';
+import withLayout, { withLayoutProps } from '../../components/layout/Layout';
 import TextLayout from '../../components/presets/TextLayout';
 
 const ENGLISH_ID = "16JZkgHATvPYASiMQRDSqGbI4EWQSkIXHW7q1SjtR1MQ";
@@ -12,5 +13,5 @@ const TermsAndConditions: FC = (props: InferGetStaticPropsType<typeof getStaticP
     content={props as never} />
 )
 
-export default TermsAndConditions;
-export const getStaticProps: GetStaticProps = GenerateProps(ENGLISH_ID, BAHASA_ID);
+export default withLayout(TermsAndConditions);
+export const getStaticProps: GetStaticProps = withLayoutProps(GenerateProps(ENGLISH_ID, BAHASA_ID));

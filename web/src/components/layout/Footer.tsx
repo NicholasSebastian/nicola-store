@@ -1,39 +1,40 @@
 import React, { FC, useRef } from 'react';
+import { FaInstagramSquare, FaLine, FaWhatsappSquare } from "react-icons/fa";
+import { SiGmail } from "react-icons/si";
 import { useRouter } from 'next/router';
 import Link from "next/link";
 import styled, { useTheme } from "styled-components";
-import { FaInstagramSquare, FaLine, FaWhatsappSquare } from "react-icons/fa";
-import { SiGmail } from "react-icons/si";
+import useLanguage, { ILocalization } from '../../hooks/useLanguage';
 
-const copyright = "lanica";
-const email = "lanicathelabel@gmail.com";
-const instagram = "nicolabaharyy"; // TODO: Change these.
-const line = "";
-const whatsapp = "6282111602465";
+const localization: ILocalization = {
+  'contact': { en: "Contact Us", id: "Hubungi Kami" },
+  'returns': { en: "Returns Policy", id: "Kebijakan pengembalian" },
+  'privacy': { en: "Privacy Policy", id: "Kebijakan pribadi" },
+  'shipping': { en: "Shipping Policy", id: "Kebijakan Pengiriman" },
+  'terms': { en: "Terms and Conditions", id: "Syarat dan Ketentuan" }
+}
 
-const emailUrl = `mailto:${email}`;
-const instagramUrl = `https://www.instagram.com/${instagram}/`;
-const lineUrl = `https://line.me/ti/p/${line}`;
-const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsapp}`;
-
-const Footer: FC = () => {
+const Footer: FC<IFooterProps> = ({ socials }) => {
   const theme: any = useTheme();
   const { pathname } = useRouter();
+  const [language] = useLanguage();
+  const { copyright, email, instagram, line, whatsapp } = socials;
   const currentYear = useRef(new Date().getFullYear()).current;
+
   return (
     <Container exception={pathname === '/checkout'}>
       <div>
-        <Link href="/legal/returns-policy">Returns Policy</Link>
-        <Link href="/legal/privacy-policy">Privacy Policy</Link>
-        <Link href="/legal/shipping-policy">Shipping Policy</Link>
-        <Link href="/legal/terms-and-conditions">Terms and Conditions</Link>
+        <Link href="/legal/returns-policy">{localization.returns[language]}</Link>
+        <Link href="/legal/privacy-policy">{localization.privacy[language]}</Link>
+        <Link href="/legal/shipping-policy">{localization.shipping[language]}</Link>
+        <Link href="/legal/terms-and-conditions">{localization.terms[language]}</Link>
       </div>
       <div>
-        <h4>Contact Us</h4>
-        <a href={emailUrl}><SiGmail size={30} color={theme.lightFont} /></a>
-        <a href={instagramUrl}><FaInstagramSquare size={30} color={theme.lightFont} /></a>
-        <a href={lineUrl}><FaLine size={30} color={theme.lightFont} /></a>
-        <a href={whatsappUrl}><FaWhatsappSquare size={30} color={theme.lightFont} /></a>
+        <h4>{localization.contact[language]}</h4>
+        <a href={`mailto:${email}`}><SiGmail size={30} color={theme.lightFont} /></a>
+        <a href={instagram}><FaInstagramSquare size={30} color={theme.lightFont} /></a>
+        <a href={line}><FaLine size={30} color={theme.lightFont} /></a>
+        <a href={whatsapp}><FaWhatsappSquare size={30} color={theme.lightFont} /></a>
       </div>
       <span>{`Copyright © ${currentYear} ${copyright}`}</span>
     </Container>
@@ -120,6 +121,16 @@ const Container = styled.footer<IStyleArguments>`
     }
   }
 `;
+
+export interface IFooterProps {
+  socials: {
+    copyright: string
+    email: string
+    instagram: string
+    line: string
+    whatsapp: string
+  }
+} 
 
 interface IStyleArguments {
   exception: boolean

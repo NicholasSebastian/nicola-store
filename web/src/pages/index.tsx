@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import GenerateProps from '../server-props/index';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
 import imageUrlFor from '../utils/imageUrlFor';
+import withLayout, { withLayoutProps } from '../components/layout/Layout';
 import SEO from '../components/SEO';
 import Button from '../components/Button';
 import Carousel, { IBannerData } from '../components/Carousel';
@@ -92,8 +93,8 @@ const Index: FC<IHomeContent> = (props) => {
   );
 }
 
-export default Index;
-export const getStaticProps: GetStaticProps = GenerateProps;
+export default withLayout(Index);
+export const getStaticProps: GetStaticProps = withLayoutProps(GenerateProps);
 
 const Container = styled.div`
   h2 {

@@ -6,7 +6,7 @@ import Item from '../../components/Item';
 // TODO: Pagination.
 
 const sortOrders: ILocalization = {
-  'relevance': { en: 'Relevance', id: 'Paling Sesuai' },
+  'relevance': { en: 'Relevance', id: 'Sesuai' },
   'lowest': { en: 'Lowest Price', id: 'Harga Terendah' },
   'highest': { en: 'Highest Price', id: 'Harga Termahal' }
 };

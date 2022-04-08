@@ -4,7 +4,6 @@ import { SessionProvider } from 'next-auth/react';
 import { BagProvider } from '../hooks/useBag';
 import { CurrencyProvider } from '../hooks/useCurrency';
 import { LanguageProvider } from '../hooks/useLanguage';
-import Layout from '../components/layout/Layout';
 
 const theme = {
   bg: '#f9f2ee',
@@ -24,9 +23,7 @@ export default ({ Component, pageProps: { session, ...pageProps } }) => {
           <LanguageProvider>
             <ThemeProvider theme={theme}>
               <BagProvider>
-                <Layout>
-                  <Component {...pageProps} />
-                </Layout>
+                <Component {...pageProps} />
               </BagProvider>
             </ThemeProvider>
           </LanguageProvider>
@@ -42,11 +39,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    margin: 0;
-    padding: 0;
     font-family: 'Poppins', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
 
   button, a, input, textarea {
@@ -56,7 +49,6 @@ const GlobalStyles = createGlobalStyle`
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Oswald', sans-serif;
     text-transform: uppercase;
-    letter-spacing: 0.1rem;
   }
 
   div, span, p {

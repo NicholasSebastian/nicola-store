@@ -4,6 +4,7 @@ import { signOut } from 'next-auth/react';
 import styled from 'styled-components';
 import FetchProps from '../server-props/profile';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
+import withLayout, { withLayoutProps } from '../components/layout/Layout';
 import SEO from '../components/SEO';
 
 const localization: ILocalization = {
@@ -85,8 +86,8 @@ const Profile: FC = (props: InferGetServerSidePropsType<typeof getServerSideProp
   );
 }
 
-export default Profile;
-export const getServerSideProps: GetServerSideProps = FetchProps;
+export default withLayout(Profile);
+export const getServerSideProps: GetServerSideProps = withLayoutProps(FetchProps);
 
 const Container = styled.div`
   width: 90%;

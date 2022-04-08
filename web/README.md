@@ -1,30 +1,23 @@
 # TO DO LIST
 
-- Payment System: Direct Transfer or Third-Party Handler?
-  - Direct Transfer:
-    - When a user checks-out, a new entry in the Sanity is created with status 'Waiting for Payment'. (+ Line Message)
-    - The user has to submit their 'Bukti Pembayaran' to a form in a page.
-    - This 'Bukti Pembayaran' is sent to our Email and Line.
-    - We are to manually update the row's status in the Sanity to 'Processing'.
-    - Once the product has arrived at the customer, we manually update the status to 'Finished'.
-  - Third-Party Handler: Integrate their API as a checkout option.
+- Payment System
+  - When a user checks-out, a new entry in the Sanity is created with status 'Waiting for Payment'. (+ Line Message)
+  - The user has to submit their 'Bukti Pembayaran' to a form in a page.
+  - This 'Bukti Pembayaran' is sent to our Email and Line.
+  - We are to manually update the row's status in the Sanity to 'Processing'.
+  - Once the product has arrived at the customer, we manually update the status to 'Finished'.
 
 - Account's past orders page.
 
-- Use bcrypt to encrypt passwords.
-
 - Sync Shopping Bag to database.
+
+- Use bcrypt to encrypt passwords.
 
 know yourself.
 
-## Smaller Stuff
-
-- Component content from Sanity: Header categories(, newest collection) and Footer pages.
-- Language toggle for header and footer elements.
-- Footer social links.
-
 ## Even Smaller, Less Important Stuff
 
+- Remove the 'callBackUrl' from the sign in page URL query.
 - Product Page recommendations.
 - Like the categories page, but for collections.
 - Shipping prices from Sanity.

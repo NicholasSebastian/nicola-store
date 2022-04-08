@@ -1,13 +1,15 @@
 import React, { FC, Fragment, useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import ReCaptcha from 'react-google-recaptcha';
+import { GetStaticProps } from 'next';
 import { signIn } from 'next-auth/react';
 import styled from 'styled-components';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
+import withLayout, { generateLayoutProps } from '../components/layout/Layout';
 import SEO from '../components/SEO';
 import FormInput from '../components/FormInput';
 import Loading from '../components/Loading';
 import Button from '../components/Button';
+import ReCaptcha from '../components/ReCaptcha';
 
 const localization: ILocalization = {
   'login': { en: 'Log In', id: 'Masuk' },
@@ -188,7 +190,7 @@ const SignUp: FC<IPageProps> = ({ changePage }) => {
             {localization.newsletter[language]}
           </label>
           {recaptchaError && <span>{localization.recaptcha[language]}</span>}
-          <ReCaptcha sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_KEY} onChange={val => setNotRobot(!!val)} />
+          <ReCaptcha onChange={val => setNotRobot(!!val)} />
           <Button primary onClick={onSubmit}>{localization.signup[language]}</Button>
           <hr />
         </Fragment>
@@ -216,7 +218,8 @@ const Page: FC = () => {
     <Login changePage={() => setSignupPage(true)} />;
 }
 
-export default Page;
+export default withLayout(Page);
+export const getStaticProps: GetStaticProps = generateLayoutProps;
 
 const Container = styled.div`
   max-width: 320px;

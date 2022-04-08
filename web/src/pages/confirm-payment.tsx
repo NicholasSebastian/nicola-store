@@ -1,12 +1,14 @@
 import React, { FC, Fragment, useState } from 'react';
-import ReCaptcha from 'react-google-recaptcha';
 import { BiCalendarMinus, BiCalendarPlus } from 'react-icons/bi';
+import { GetStaticProps } from 'next';
 import styled from 'styled-components';
 import useLanguage, { ILocalization } from '../hooks/useLanguage';
+import withLayout, { generateLayoutProps } from '../components/layout/Layout';
 import SEO from '../components/SEO';
 import FormInput from '../components/FormInput';
 import FormOption from '../components/FormOption';
 import Button from '../components/Button';
+import ReCaptcha from '../components/ReCaptcha';
 
 const localization: ILocalization = {
   'confirmation': { en: 'Payment Confirmation', id: 'Konfirmasi Pembayaran' },
@@ -69,7 +71,7 @@ const ConfirmPayment: FC = () => {
             value={bankName} onChange={setBankName} />
           <FormInput label={localization.amount[language]} placeholder='Amount (Rp.)' 
             value={amount} onChange={setAmount} />
-          <ReCaptcha sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_KEY} onChange={val => setNotRobot(!!val)} />
+          <ReCaptcha onChange={val => setNotRobot(!!val)} />
         </div>
       </div>
       <Button primary onClick={onSubmit}>{localization.confirm[language]}</Button>
@@ -77,7 +79,8 @@ const ConfirmPayment: FC = () => {
   );
 }
 
-export default ConfirmPayment;
+export default withLayout(ConfirmPayment);
+export const getStaticProps: GetStaticProps = generateLayoutProps;
 
 const Container = styled.div`
   max-width: 320px;

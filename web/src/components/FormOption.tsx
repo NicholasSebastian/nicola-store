@@ -30,6 +30,7 @@ const Container = styled.div`
   font-weight: 600;
 
   > div {
+    width: 100%;
     border: 1px solid ${props => props.theme.accent};
     padding: 10px;
     margin-top: 2px;

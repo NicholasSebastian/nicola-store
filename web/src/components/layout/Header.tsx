@@ -7,28 +7,23 @@ import { useSession, signIn } from "next-auth/react";
 import styled, { useTheme } from "styled-components";
 import useBag from "../../hooks/useBag";
 import useCurrency from "../../hooks/useCurrency";
-import useLanguage, { Language } from "../../hooks/useLanguage";
+import useLanguage, { Language, ILocalization } from "../../hooks/useLanguage";
 import logo from '../../../public/logo.png';
-
-const navigationPaths = [
-  { name: 'New Arrivals', path: '/new-arrivals' },
-  { name: 'Shirts', path: '/category/shirts' },
-  { name: 'Outerwear', path: '/category/outerwear' },
-  { name: 'Pants', path: '/category/pants' },
-  { name: 'Skirts', path: '/category/skirts' },
-  { name: 'Dresses', path: '/category/dresses' },
-  { name: 'On Sale', path: '/sale' }
-];
 
 const languageNames: ILanguageMap = {
   'en': "English",
-  'id': "Bahasa Indonesia"
+  'id': "Bahasa ID"
 };
 
-const Header: FC<IHeaderProps> = ({ message }) => {
-  const theme: any = useTheme();
+const localization: ILocalization = {
+  'newArrivals': { en: 'New Arrivals', id: 'Terbaru' },
+  'sale': { en: 'On Sale', id: 'Sale' }
+};
+
+const Header: FC<IHeaderProps> = ({ message, categories }) => {
   const { status, data } = useSession();
   const router = useRouter();
+  const theme: any = useTheme();
   
   const { bag, openBag } = useBag();
   const [currency, setCurrency] = useCurrency();
@@ -85,9 +80,11 @@ const Header: FC<IHeaderProps> = ({ message }) => {
           <GiHamburgerMenu size={30} color={theme.darkFont} />
         </label>
         <div>
-          {navigationPaths.map((path, i) => (
-            <Link key={i} href={path.path}>{path.name}</Link>
+          <Link href='/new-arrivals'>{localization.newArrivals[language]}</Link>
+          {categories.map((path, i) => (
+            <Link key={i} href={`/category/${path.slug}`}>{path.name[language]}</Link>
           ))}
+          <Link href='/sale'>{localization.sale[language]}</Link>
           {extra}
           {rightExtras}
         </div>
@@ -362,12 +359,21 @@ const Container = styled.nav<IStyleArguments>`
   }
 `;
 
-interface IHeaderProps {
+export interface IHeaderProps {
+  categories: Array<ICategory>
   message?: string
 }
 
 interface IStyleArguments {
   exception: boolean
+}
+
+interface ICategory {
+  name: {
+    en: string
+    id: string
+  }
+  slug: string
 }
 
 type ILanguageMap = { 
