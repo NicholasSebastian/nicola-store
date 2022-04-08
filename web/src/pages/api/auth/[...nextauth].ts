@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { compare } from 'bcrypt';
 import db from '../../../lib/firestore';
 
 export default NextAuth({
@@ -15,7 +16,7 @@ export default NextAuth({
           const accountsRef = db.collection('accounts');
           const account = await accountsRef.doc(username).get();
           if (account.exists) {
-            if (password === account.get('password')) {
+            if (await compare(password, account.get('password'))) {
               const email = account.get('email');
               return { name: username, email };
             }

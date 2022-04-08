@@ -1,8 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { hash } from 'bcrypt';
 import db from '../../../lib/firestore';
 import Sheets from '../../../lib/sheets';
 import { ISignUpErrors } from '../../login';
 import { NEWSLETTER_ID, NEWSLETTER_SHEET } from '../newsletter';
+
+const SALT_ROUNDS = 10;
 
 async function checkUsername(username: string) {
   const accountsRef = db.collection('accounts');
@@ -23,8 +26,10 @@ async function addNewsletterSubscription(name: string, email: string) {
 
 async function createAccount(account: any) {
   const { username, password, fullname, email, phone, address, newsletter } = account;
+  const encryptedPassword = await hash(password, SALT_ROUNDS);
+
   const accountsRef = db.collection('accounts');
-  await accountsRef.doc(username).set({ password, fullname, email, phone, address });
+  await accountsRef.doc(username).set({ password: encryptedPassword, fullname, email, phone, address });
   if (newsletter) await addNewsletterSubscription(fullname, email);
 }
 

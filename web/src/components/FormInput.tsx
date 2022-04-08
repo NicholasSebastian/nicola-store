@@ -64,7 +64,7 @@ const Container = styled.label`
       border: none;
       display: flex;
       align-items: center;
-      padding: 10px 3px;
+      padding: 7px 3px;
 
       :hover {
         cursor: pointer;

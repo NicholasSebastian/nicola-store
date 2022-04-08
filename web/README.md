@@ -11,8 +11,6 @@
 
 - Sync Shopping Bag to database.
 
-- Use bcrypt to encrypt passwords.
-
 know yourself.
 
 ## Even Smaller, Less Important Stuff
