@@ -2,6 +2,7 @@ import React, { FC, Fragment, useEffect, useRef, useState } from 'react';
 import { GetStaticProps } from 'next';
 import styled from 'styled-components';
 import { BagConsumer, IItemData } from '../hooks/useBag';
+import useLanguage, { ILocalization } from '../hooks/useLanguage';
 import formatCurrency from '../utils/formatCurrency';
 import imageUrlFor from '../utils/imageUrlFor';
 import withLayout, { generateLayoutProps } from '../components/layout/Layout';
@@ -12,13 +13,35 @@ import PriceLabel from '../components/PriceLabel';
 
 const BREAKPOINT = 900;
 
+const localization: ILocalization = {
+  'orderSummary': { en: 'Order Summary', id: 'Ringkasan Pesanan' },
+  'customerDetails': { en: 'Customer Details', id: 'Detail Pelanggan' },
+  'shippingDetails': { en: 'Delivery Details', id: 'Rincian Pengiriman' }
+};
+
 const Checkout: FC = () => {
+  const [language] = useLanguage();
   const { discount, promoCode, setPromoCode } = usePromo();
+  const [proceed, setProceed] = useState<Page>(0);
+
+  const nextPage = () => {
+    if (proceed < 2) {
+      // This looks retarded because of TypeScript constraints.
+      setProceed(i => i === 0 ? 1 : 2);
+    }
+    else {
+      // TODO:
+      // - Prompt the user to finalize their details.
+      // - On ok, send post request while showing a loading screen.
+      // - On finish, display a message and a button that would lead them to the confirm payment page.
+    }
+  }
+
   return (
     <Container>
       <SEO pageTitle='Checkout' noFollow />
       <div>
-        <h1>Order Summary</h1>
+        <h1>{localization[["orderSummary", "customerDetails", "shippingDetails"][proceed]][language]}</h1>
       </div>
       <BagConsumer>
         {bag => {
@@ -35,11 +58,18 @@ const Checkout: FC = () => {
           return (
             <Fragment>
               <div>
-                {/* TODO: Make this like a carousel to show multiple pages? */}
-                {(bag.length > 0) ? 
+                {(proceed === 0) && ((bag.length > 0) ? 
                   bag.map((item, i) => <OrderItem key={i} {...item} />) : 
                   <span>Your cart is empty.</span>
-                }
+                )}
+                {(proceed === 1) && (
+                  // TODO
+                  <div>Customer Details</div>
+                )}
+                {(proceed === 2) && (
+                  // TODO
+                  <div>Delivery Details</div>
+                )}
               </div>
               <div>
                 <div>
@@ -49,7 +79,7 @@ const Checkout: FC = () => {
                   <SummaryItem label='Total' value={total} />
                   <FormInput label='Promo Code' placeholder='Promo Code (Optional)'
                     value={promoCode} onChange={setPromoCode} />
-                  <Button primary disabled={bag.length === 0}>Checkout</Button>
+                  <Button primary onClick={nextPage} disabled={bag.length === 0}>Checkout</Button>
                 </div>
               </div>
             </Fragment>
@@ -187,8 +217,12 @@ const OrderItemContainer = styled.div`
     margin-left: 20px;
     font-size: 14px;
     
-    > div:first-child {
-      font-weight: 600;
+    > div {
+      margin-bottom: 5px;
+
+      :first-child {
+        font-weight: 600;
+      }
     }
   }
 `;
@@ -206,3 +240,5 @@ interface SummaryItemProps {
   label: string
   value: number | string
 }
+
+type Page = 0 | 1 | 2;

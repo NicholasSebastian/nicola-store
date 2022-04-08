@@ -43,12 +43,20 @@ const BagItem: FC<IItemProps> = props => {
 export default BagItem;
 
 const ItemContainer = styled.div`
-  margin: 0 14px;
+  width: 90%;
+  margin: 0 auto;
   padding: 10px 0;
-  border-top: 1px solid ${props => props.theme.shadow};
   display: grid;
   grid-template-columns: ${IMAGE_WIDTH}px 1fr;
   grid-gap: 0 10px;
+
+  :first-of-type {
+    padding-top: 0;
+  }
+
+  :not(:first-of-type) {
+    border-top: 1px solid ${props => props.theme.shadow};
+  }
 
   > div:first-child > img {
     border: 1px solid ${props => props.theme.highlight};

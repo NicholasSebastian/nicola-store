@@ -16,7 +16,7 @@ know yourself.
 - Custom 404 and 500 page.
 - Product Page recommendations.
 - Like the categories page, but for collections.
-- Shipping prices from Sanity.
+- Configurable Shipping prices from CMS.
 - Promo codes at checkout?
 - Instagram posts on home screen.
 - Home page pop-up.
@@ -24,7 +24,7 @@ know yourself.
 
 ## The Problem
 
-The fact that there are too many different sources of data.
+There are too many different sources of data.
 There isn't one single source of control.
 
 Currently:
