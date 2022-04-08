@@ -26,18 +26,18 @@ class Sheets {
   }
 
   public async getRows(sheet: string, rangeFrom: string, rangeTo: string) {
-    console.log(`Fetching rows from range '${sheet}!${rangeFrom}:${rangeTo}'.`); // LOG
+    /* LOG */ console.log(`Fetching rows from range '${sheet}!${rangeFrom}:${rangeTo}'.`);
     const { data } = await this.instance.spreadsheets.values.get({
       spreadsheetId: this.spreadsheetId,
       range: `${sheet}!${rangeFrom}:${rangeTo}`
     });
 
-    console.log(`${data.values.length} rows found.`); // LOG
+    /* LOG */ console.log(`${data.values.length} rows found.`);
     return data.values;
   }
 
   public async addSheet(title: string) {
-    console.log(`Adding a new sheet with name '${title}'.`); // LOG
+    /* LOG */ console.log(`Adding a new sheet with name '${title}'.`);
     const response = await this.instance.spreadsheets.batchUpdate({ 
       spreadsheetId: this.spreadsheetId,
       requestBody: {
@@ -59,7 +59,7 @@ class Sheets {
     const rangeStart = 'A';
     const rangeEnd = String.fromCharCode(rangeStart.charCodeAt(0) + rows[0].length - 1);
 
-    console.log(`Adding ${rows.length} row(s) to range '${sheet}!${rangeStart}:${rangeEnd}'.`); // LOG
+    /* LOG */ console.log(`Adding ${rows.length} row(s) to range '${sheet}!${rangeStart}:${rangeEnd}'.`);
     await this.instance.spreadsheets.values.append({
       spreadsheetId: this.spreadsheetId, 
       range: `${sheet}!${rangeStart}:${rangeEnd}`,
@@ -115,8 +115,7 @@ class Sheets {
   }
 
   private async setDataValidation(range: IRange, condition: ICondition, errMessage: string, isList = false) {
-    // LOG
-    console.log(`Setting data validation '${condition.type}' on range (${range.startColumnIndex}, ${range.startRowIndex}) to (${range.endColumnIndex}, ${range.endRowIndex}) of sheet ID '${range.sheetId}'.`);
+    /* LOG */ console.log(`Setting data validation '${condition.type}' on range (${range.startColumnIndex}, ${range.startRowIndex}) to (${range.endColumnIndex}, ${range.endRowIndex}) of sheet ID '${range.sheetId}'.`);
 
     await this.instance.spreadsheets.batchUpdate({
       spreadsheetId: this.spreadsheetId,
