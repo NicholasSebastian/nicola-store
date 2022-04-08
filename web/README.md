@@ -1,15 +1,13 @@
 # TO DO LIST
 
 - Payment System
-  - When a user checks-out, a new entry in the Sanity is created with status 'Waiting for Payment'. (+ Line Message)
+  - When a user checks-out, a new entry in Sanity is created with status 'Waiting for Payment'. (+ Line Message)
   - The user has to submit their 'Bukti Pembayaran' to a form in a page.
   - This 'Bukti Pembayaran' is sent to our Email and Line.
   - We are to manually update the row's status in the Sanity to 'Processing'.
   - Once the product has arrived at the customer, we manually update the status to 'Finished'.
 
 - Account's past orders page.
-
-- Sync Shopping Bag to database.
 
 know yourself.
 

@@ -1,24 +1,24 @@
 import React, { FC, useState, useEffect, useContext, createContext, useRef } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
+import { useSession } from 'next-auth/react';
 import styled from 'styled-components';
 import ShoppingBag from '../components/layout/ShoppingBag';
 import Loading from '../components/Loading';
 import { Size } from '../pages/product/[slug]';
 
 const DRAWER_SPEED = 250; // in milliseconds.
+const SYNC_TIMEOUT = 10000;
 
 const BagContext = createContext<IBagContext>(undefined);
 const useBag = () => useContext(BagContext);
 
-function loadBagData() {
-  // TODO: Fetch data if logged in.
-  return [];
-}
-
 const BagProvider: FC = ({ children }) => {
-  const [bag, setBag] = useState<Bag>(loadBagData());
+  const { status } = useSession();
+  const [bag, setBag] = useState<Bag>([]);
+
   const containerRef = useRef<HTMLDivElement>();
   const drawerRef = useRef<HTMLDivElement>();
+  const syncTimeout = useRef<NodeJS.Timeout>();
   
   const openBag = () => {
     containerRef.current.style.display = 'block';
@@ -45,10 +45,39 @@ const BagProvider: FC = ({ children }) => {
     }
   }
 
+  const loadBag = async () => {
+    const response = await fetch('/api/shopping-bag', { method: 'GET' });
+    if (response.ok) {
+      setBag(await response.json());
+      console.log("Shopping Bag data loaded.");
+    }
+  }
+
+  const updateDatabase = async () => {
+    console.log("Updating shopping bag data.");
+    await fetch('/api/shopping-bag', {
+      method: 'POST', 
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ items: bag })
+    });
+  }
+
+  useEffect(() => { 
+    if (status === 'authenticated') loadBag(); 
+  }, [status]);
+
   useEffect(() => {
-    // TODO: Keep the database in sync if logged in.
+    if (status === 'authenticated') {
+      // To prevent spamming the server with requests,
+      // Only send the request if no more client bag state updates for the past 10 seconds.
+      if (syncTimeout.current) clearTimeout(syncTimeout.current);
+      syncTimeout.current = setTimeout(updateDatabase, SYNC_TIMEOUT);
+    }
   }, [bag]);
-  
+
   return (
     <BagContext.Provider value={{ bag, setBag, openBag, addToBag, closeBag }}>
       <Container ref={containerRef} onClick={closeBag} >
@@ -122,7 +151,7 @@ const Container = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 2;
+  z-index: 3;
 
   > div:first-child {
     background-color: ${props => props.theme.bg};

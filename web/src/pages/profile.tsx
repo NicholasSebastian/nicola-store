@@ -72,11 +72,11 @@ const Profile: FC = (props: InferGetServerSidePropsType<typeof getServerSideProp
       <SEO pageTitle='Profile' noFollow />
       <nav>
         <button onClick={() => setCurrentPage('profile')} 
-          className={currentPage === 'profile' && 'selected'}>
+          className={currentPage === 'profile' ? 'selected' : undefined}>
           Profile
         </button>
         <button onClick={() => setCurrentPage('orders')}
-          className={currentPage === 'orders' && 'selected'}>
+          className={currentPage === 'orders' ? 'selected' : undefined}>
           Order History
         </button>
         <button onClick={() => signOut()}>Sign Out</button>
