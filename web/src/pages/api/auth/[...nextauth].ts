@@ -27,6 +27,7 @@ export default NextAuth({
   ],
   pages: {
     signIn: '/login',
-    // TODO: https://next-auth.js.org/configuration/pages
+    error: '/500'
+    // https://next-auth.js.org/configuration/pages
   }
 });

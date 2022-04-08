@@ -1,6 +1,5 @@
 import React, { FC, Fragment, useState, useEffect } from "react";
 import { GiHamburgerMenu, GiShoppingBag } from "react-icons/gi";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSession, signIn } from "next-auth/react";
@@ -8,7 +7,7 @@ import styled, { useTheme } from "styled-components";
 import useBag from "../../hooks/useBag";
 import useCurrency from "../../hooks/useCurrency";
 import useLanguage, { Language, ILocalization } from "../../hooks/useLanguage";
-import logo from '../../../public/logo.png';
+import Logo from "./Logo";
 
 const languageNames: ILanguageMap = {
   'en': "English",
@@ -71,9 +70,7 @@ const Header: FC<IHeaderProps> = ({ message, categories }) => {
     <Container exception={router.pathname === '/checkout'}>
       <div style={{ display: message ? 'block' : 'none' }}>{message}</div>
       <div>
-        <Link href='/'>
-          <Image src={logo} alt="Logo" />
-        </Link>
+        <Logo />
         <input type='checkbox' id="nav-drawer-toggle" 
           checked={drawerOpen} onChange={() => setDrawerOpen(!drawerOpen)} />
         <label htmlFor="nav-drawer-toggle">
@@ -98,7 +95,7 @@ const Header: FC<IHeaderProps> = ({ message, categories }) => {
 
 export default Header;
 
-const breakpoint = 900;
+const BREAKPOINT = 900;
 
 const Container = styled.nav<IStyleArguments>`
   position: sticky;
@@ -126,16 +123,6 @@ const Container = styled.nav<IStyleArguments>`
     padding: 16px 0;
     border-bottom: 1px solid ${props => props.theme.highlight};
     position: relative;
-
-    // Logo
-    > *:first-child {
-      height: 40px !important;
-      aspect-ratio: 7 / 2;
-
-      :hover {
-        cursor: pointer;
-      }
-    }
 
     // Navigation Links
     > div:first-of-type > a, 
@@ -243,7 +230,7 @@ const Container = styled.nav<IStyleArguments>`
       }
     }
 
-    @media only screen and (max-width: ${breakpoint}px) {
+    @media only screen and (max-width: ${BREAKPOINT}px) {
       // Navigation Links
       > div:first-of-type {
         background-color: ${props => props.theme.bg};
@@ -325,7 +312,7 @@ const Container = styled.nav<IStyleArguments>`
     }
   }
 
-  @media only screen and (min-width: ${breakpoint}px) {
+  @media only screen and (min-width: ${BREAKPOINT}px) {
     // Message Bar
     > div:first-child {
       font-size: 13px;
@@ -333,11 +320,6 @@ const Container = styled.nav<IStyleArguments>`
 
     // Header
     > div:nth-child(2) {
-
-      // Logo
-      > *:first-child {
-        height: 64px !important;
-      }
 
       // Navigation Container
       > div:first-of-type {

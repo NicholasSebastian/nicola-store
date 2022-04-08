@@ -17,14 +17,13 @@ know yourself.
 
 ## Even Smaller, Less Important Stuff
 
-- Remove the 'callBackUrl' from the sign in page URL query.
+- Custom 404 and 500 page.
 - Product Page recommendations.
 - Like the categories page, but for collections.
 - Shipping prices from Sanity.
 - Promo codes at checkout?
 - Instagram posts on home screen.
 - Home page pop-up.
-- In-Website chat.
 - Schema Markup for SEO.
 
 ## The Problem

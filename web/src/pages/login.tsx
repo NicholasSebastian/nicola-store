@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useState } from 'react';
+import React, { FC, Fragment, useEffect, useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { GetStaticProps } from 'next';
 import { signIn } from 'next-auth/react';
@@ -213,6 +213,7 @@ const LoginErrorMessage: FC = () => {
 
 const Page: FC = () => {
   const [signupPage, setSignupPage] = useState(false);
+  useEffect(() => window.scrollTo(0, 0), [signupPage]);
   return signupPage ? 
     <SignUp changePage={() => setSignupPage(false)} /> : 
     <Login changePage={() => setSignupPage(true)} />;
@@ -234,6 +235,7 @@ const Container = styled.div`
   > div:first-of-type {
     color: #f44;
     font-size: 14px;
+    margin-bottom: 20px;
   }
 
   // Sign-up page Newsletter checkbox.

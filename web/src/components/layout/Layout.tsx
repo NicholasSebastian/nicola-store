@@ -2,9 +2,10 @@ import React, { FC, ComponentType } from 'react';
 import { GetStaticProps, GetServerSideProps } from 'next';
 import styled from 'styled-components';
 import sanity from '../../lib/sanity';
+import mergeDeep from '../../utils/deepMerge';
 import Header, { IHeaderProps } from './Header';
 import Footer, { IFooterProps } from './Footer';
-import mergeDeep from '../../utils/deepMerge';
+import Floaty from './Floaty';
 
 function withLayout<P extends object>(Component: ComponentType<P>): FC<P & LayoutProps> {
   return ({ message, categories, socials, ...props }) => (
@@ -12,6 +13,7 @@ function withLayout<P extends object>(Component: ComponentType<P>): FC<P & Layou
       <Header message={message} categories={categories} />
       <main><Component {...props as P} /></main>
       <Footer socials={socials} />
+      <Floaty whatsapp={socials.whatsapp} />
     </Container>
   );
 }

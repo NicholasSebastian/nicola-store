@@ -37,6 +37,10 @@ const GlobalStyles = createGlobalStyle`
   * {
     box-sizing: border-box;
   }
+  
+  html {
+    scroll-behavior: smooth;
+  }
 
   body {
     font-family: 'Poppins', sans-serif;
@@ -49,6 +53,7 @@ const GlobalStyles = createGlobalStyle`
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Oswald', sans-serif;
     text-transform: uppercase;
+    letter-spacing: 0.1rem;
   }
 
   div, span, p {
