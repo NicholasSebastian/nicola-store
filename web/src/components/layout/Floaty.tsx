@@ -8,8 +8,8 @@ const ANIMATION_DURATION = 200;
 
 const Floaty: FC<IFloatyProps> = ({ whatsapp }) => {
   const [show, setShow] = useState(true);
-  const [visibility, setVisibility] = useState<Visibility>('visible');
-  const [opacity, setOpacity] = useState(1);
+  const [visibility, setVisibility] = useState<Visibility>('hidden');
+  const [opacity, setOpacity] = useState(0);
 
   useScroll((scrollPos, documentHeight) => {
     setShow(scrollPos + window.innerHeight < documentHeight - FLOATY_OFFSET);

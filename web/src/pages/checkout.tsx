@@ -19,10 +19,33 @@ const localization: ILocalization = {
   'shippingDetails': { en: 'Delivery Details', id: 'Rincian Pengiriman' }
 };
 
+const CustomerForm: FC<IPageProps> = props => {
+  const { setTitle, setData } = props;
+  const [language] = useLanguage();
+  useEffect(() => setTitle(localization.customerDetails[language]), []);
+  return (
+    // TODO
+    <div>Customer form</div>
+  );
+}
+
+const DeliveryForm: FC<IPageProps> = props => {
+  const { setTitle, setData } = props;
+  const [language] = useLanguage();
+  useEffect(() => setTitle(localization.shippingDetails[language]), []);
+  return (
+    // TODO
+    <div>Delivery form</div>
+  );
+}
+
 const Checkout: FC = () => {
   const [language] = useLanguage();
   const { discount, promoCode, setPromoCode } = usePromo();
   const [proceed, setProceed] = useState<Page>(0);
+  const [pageTitle, setPageTitle] = useState(localization.orderSummary[language]);
+  const customerDetails = useRef();
+  const deliveryDetails = useRef();
 
   const nextPage = () => {
     if (proceed < 2) {
@@ -41,7 +64,7 @@ const Checkout: FC = () => {
     <Container>
       <SEO pageTitle='Checkout' noFollow />
       <div>
-        <h1>{localization[["orderSummary", "customerDetails", "shippingDetails"][proceed]][language]}</h1>
+        <h1>{pageTitle}</h1>
       </div>
       <BagConsumer>
         {bag => {
@@ -63,12 +86,12 @@ const Checkout: FC = () => {
                   <span>Your cart is empty.</span>
                 )}
                 {(proceed === 1) && (
-                  // TODO
-                  <div>Customer Details</div>
+                  <CustomerForm setTitle={setPageTitle} 
+                    setData={data => customerDetails.current = data} />
                 )}
                 {(proceed === 2) && (
-                  // TODO
-                  <div>Delivery Details</div>
+                  <DeliveryForm setTitle={setPageTitle} 
+                    setData={data => deliveryDetails.current = data} />
                 )}
               </div>
               <div>
@@ -79,7 +102,9 @@ const Checkout: FC = () => {
                   <SummaryItem label='Total' value={total} />
                   <FormInput label='Promo Code' placeholder='Promo Code (Optional)'
                     value={promoCode} onChange={setPromoCode} />
-                  <Button primary onClick={nextPage} disabled={bag.length === 0}>Checkout</Button>
+                  <Button primary onClick={nextPage} disabled={bag.length === 0}>
+                    {proceed < 2 ? 'Continue' : 'To Payment'}
+                  </Button>
                 </div>
               </div>
             </Fragment>
@@ -235,6 +260,11 @@ const SummaryItemContainer = styled.div`
     font-weight: 600;
   }
 `;
+
+interface IPageProps {
+  setTitle: React.Dispatch<React.SetStateAction<string>>
+  setData: (data: any) => void
+}
 
 interface SummaryItemProps {
   label: string
